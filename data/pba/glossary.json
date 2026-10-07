@@ -1,0 +1,138 @@
+{
+  "note": "Terminology used for translations and shown on the site's glossary page. Source of truth: edit here.",
+  "sections": [
+    {
+      "id": "road",
+      "title": {"es": "La vía", "en": "The road", "ru": "Дорога"},
+      "terms": [
+        {"es": "calzada", "en": "roadway", "ru": "проезжая часть"},
+        {"es": "vereda, acera", "en": "sidewalk", "ru": "тротуар"},
+        {"es": "banquina", "en": "shoulder", "ru": "обочина"},
+        {"es": "cordón", "en": "curb", "ru": "бордюр"},
+        {"es": "carril", "en": "lane", "ru": "полоса"},
+        {"es": "mano (de circulación)", "en": "direction of traffic; «doble mano» = two-way", "ru": "направление движения; «doble mano» — двустороннее движение"},
+        {"es": "contramano", "en": "wrong way, against traffic", "ru": "встречное направление"},
+        {"es": "senda peatonal", "en": "pedestrian crossing", "ru": "пешеходный переход"},
+        {"es": "bocacalle", "en": "intersection (where streets meet)", "ru": "перекрёсток (зона пересечения улиц)"},
+        {"es": "encrucijada", "en": "intersection", "ru": "перекрёсток"},
+        {"es": "esquina", "en": "street corner", "ru": "угол улиц, перекрёсток"},
+        {"es": "ochava", "en": "chamfered building corner", "ru": "скошенный угол дома на перекрёстке"},
+        {"es": "cuadra", "en": "city block", "ru": "квартал"},
+        {"es": "rotonda", "en": "roundabout", "ru": "перекрёсток с круговым движением"},
+        {"es": "paso a nivel", "en": "level (railway) crossing", "ru": "железнодорожный переезд"},
+        {"es": "autopista", "en": "motorway", "ru": "автомагистраль"},
+        {"es": "semiautopista", "en": "expressway", "ru": "полуавтомагистраль"},
+        {"es": "ruta", "en": "highway, rural road", "ru": "трасса, загородная дорога"},
+        {"es": "vía multicarril", "en": "multi-lane road", "ru": "многополосная дорога"},
+        {"es": "avenida", "en": "avenue", "ru": "авенида (проспект)"},
+        {"es": "zona urbana / rural", "en": "urban / rural area", "ru": "населённый пункт / загородная зона"},
+        {"es": "ciclovía", "en": "bike lane (on the roadway)", "ru": "велополоса (на проезжей части)"},
+        {"es": "bicisenda", "en": "bike path (on the sidewalk)", "ru": "велодорожка (на тротуаре)"},
+        {"es": "demarcación horizontal", "en": "road markings", "ru": "горизонтальная разметка"},
+        {"es": "señalamiento vertical", "en": "road signs", "ru": "дорожные знаки"},
+        {"es": "isleta", "en": "traffic island", "ru": "островок безопасности"}
+      ]
+    },
+    {
+      "id": "signs",
+      "title": {"es": "Señales", "en": "Signs and signals", "ru": "Знаки и сигналы"},
+      "terms": [
+        {"es": "señales reglamentarias", "en": "regulatory signs (prohibition, restriction, obligation)", "ru": "регулирующие знаки (запрета, ограничения, предписания)"},
+        {"es": "señales preventivas", "en": "warning signs", "ru": "предупреждающие знаки"},
+        {"es": "señales informativas", "en": "information signs", "ru": "информационные знаки"},
+        {"es": "señales transitorias", "en": "temporary (roadwork) signs", "ru": "временные знаки"},
+        {"es": "orla roja", "en": "red border", "ru": "красная кайма"},
+        {"es": "semáforo", "en": "traffic light", "ru": "светофор"},
+        {"es": "luz intermitente", "en": "flashing light", "ru": "мигающий сигнал"},
+        {"es": "agente de tránsito", "en": "traffic officer", "ru": "инспектор дорожного движения"},
+        {"es": "luces bajas / altas", "en": "low / high beams", "ru": "ближний / дальний свет"},
+        {"es": "luces de posición", "en": "position (parking) lights", "ru": "габаритные огни"},
+        {"es": "luces de giro", "en": "turn signals", "ru": "указатели поворота"},
+        {"es": "balizas", "en": "hazard lights; warning triangles", "ru": "аварийная сигнализация; аварийные знаки"},
+        {"es": "destello, guiñada", "en": "headlight flash", "ru": "мигание фарами"},
+        {"es": "bocina", "en": "horn", "ru": "звуковой сигнал"},
+        {"es": "PARE", "en": "STOP", "ru": "СТОП"}
+      ]
+    },
+    {
+      "id": "maneuvers",
+      "title": {"es": "Maniobras", "en": "Maneuvers", "ru": "Манёвры"},
+      "terms": [
+        {"es": "adelantamiento, sobrepaso", "en": "overtaking", "ru": "обгон"},
+        {"es": "giro", "en": "turn", "ru": "поворот"},
+        {"es": "ceder el paso", "en": "give way", "ru": "уступить дорогу"},
+        {"es": "prioridad de paso", "en": "right of way", "ru": "преимущество проезда"},
+        {"es": "detenerse / detención", "en": "stop / stopping", "ru": "остановиться / остановка"},
+        {"es": "estacionar / estacionamiento", "en": "park / parking", "ru": "поставить на стоянку / стоянка"},
+        {"es": "doble fila", "en": "double parking", "ru": "второй ряд"},
+        {"es": "marcha atrás", "en": "reversing", "ru": "движение задним ходом"},
+        {"es": "velocidad precautoria", "en": "safe (cautionary) speed", "ru": "безопасная скорость"},
+        {"es": "distancia de frenado", "en": "braking distance", "ru": "тормозной путь"},
+        {"es": "distancia de reacción", "en": "reaction distance", "ru": "путь за время реакции"},
+        {"es": "distancia de seguridad", "en": "following distance", "ru": "безопасная дистанция"}
+      ]
+    },
+    {
+      "id": "vehicles",
+      "title": {"es": "Vehículos y usuarios", "en": "Vehicles and road users", "ru": "Транспорт и участники"},
+      "terms": [
+        {"es": "conductor", "en": "driver", "ru": "водитель"},
+        {"es": "peatón", "en": "pedestrian", "ru": "пешеход"},
+        {"es": "ciclista", "en": "cyclist", "ru": "велосипедист"},
+        {"es": "motovehículo, moto", "en": "motorcycle", "ru": "мотоцикл"},
+        {"es": "ciclomotor", "en": "moped", "ru": "мопед"},
+        {"es": "triciclo / cuatriciclo", "en": "tricycle / quad", "ru": "трицикл / квадроцикл"},
+        {"es": "automóvil, auto", "en": "car", "ru": "легковой автомобиль"},
+        {"es": "camioneta", "en": "pickup, van", "ru": "пикап, фургон"},
+        {"es": "colectivo", "en": "city bus", "ru": "городской автобус"},
+        {"es": "ómnibus", "en": "bus, coach", "ru": "автобус"},
+        {"es": "acoplado / remolque", "en": "trailer", "ru": "прицеп"},
+        {"es": "tracción a sangre", "en": "horse-drawn", "ru": "гужевой"},
+        {"es": "vehículo de mayor porte", "en": "larger vehicle", "ru": "более крупное транспортное средство"}
+      ]
+    },
+    {
+      "id": "law",
+      "title": {"es": "Documentos y normas", "en": "Documents and law", "ru": "Документы и право"},
+      "terms": [
+        {"es": "licencia de conducir", "en": "driver's license", "ru": "водительские права"},
+        {"es": "principiante", "en": "new driver", "ru": "начинающий водитель"},
+        {"es": "cédula verde (cédula de identificación del automotor)", "en": "vehicle registration card", "ru": "регистрационный документ автомобиля"},
+        {"es": "cédula azul", "en": "authorization to drive someone else's car", "ru": "разрешение на управление чужим автомобилем"},
+        {"es": "VTV (Verificación Técnica Vehicular)", "en": "vehicle inspection", "ru": "техосмотр"},
+        {"es": "seguro obligatorio", "en": "mandatory insurance", "ru": "обязательная страховка"},
+        {"es": "póliza", "en": "insurance policy", "ru": "страховой полис"},
+        {"es": "dominio, placa, chapa patente", "en": "license plate", "ru": "номерной знак"},
+        {"es": "patente (impuesto)", "en": "vehicle tax", "ru": "налог на автомобиль"},
+        {"es": "DNI", "en": "national ID card", "ru": "удостоверение личности (DNI)"},
+        {"es": "siniestro (vial)", "en": "road crash", "ru": "ДТП"},
+        {"es": "alcoholemia", "en": "blood alcohol (test)", "ru": "содержание алкоголя в крови; тест на алкоголь"},
+        {"es": "infracción, falta", "en": "traffic offence", "ru": "нарушение"},
+        {"es": "multa", "en": "fine", "ru": "штраф"},
+        {"es": "retención de la licencia", "en": "license seizure", "ru": "изъятие прав"},
+        {"es": "inhabilitación", "en": "driving ban", "ru": "лишение права управления"},
+        {"es": "secuestro del vehículo", "en": "vehicle impoundment", "ru": "изъятие транспортного средства"},
+        {"es": "responsabilidad civil / penal", "en": "civil / criminal liability", "ru": "гражданская / уголовная ответственность"},
+        {"es": "pregunta eliminatoria", "en": "eliminatory question (a wrong answer fails the exam)", "ru": "критический вопрос (ошибка — провал экзамена)"}
+      ]
+    },
+    {
+      "id": "safety",
+      "title": {"es": "Seguridad", "en": "Safety", "ru": "Безопасность"},
+      "terms": [
+        {"es": "cinturón de seguridad", "en": "seat belt", "ru": "ремень безопасности"},
+        {"es": "casco", "en": "helmet", "ru": "шлем"},
+        {"es": "chaleco reflectivo", "en": "reflective vest", "ru": "светоотражающий жилет"},
+        {"es": "apoyacabezas", "en": "headrest", "ru": "подголовник"},
+        {"es": "matafuego", "en": "fire extinguisher", "ru": "огнетушитель"},
+        {"es": "botiquín", "en": "first-aid kit", "ru": "аптечка"},
+        {"es": "SRI (Sistema de Retención Infantil)", "en": "child restraint", "ru": "детское удерживающее устройство"},
+        {"es": "seguridad activa / pasiva", "en": "active / passive safety", "ru": "активная / пассивная безопасность"},
+        {"es": "punto ciego", "en": "blind spot", "ru": "слепая зона"},
+        {"es": "encandilamiento", "en": "glare, dazzle", "ru": "ослепление"},
+        {"es": "aquaplaning", "en": "aquaplaning", "ru": "аквапланирование"},
+        {"es": "cubiertas, neumáticos", "en": "tires", "ru": "шины"}
+      ]
+    }
+  ]
+}

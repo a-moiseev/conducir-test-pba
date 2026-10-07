@@ -402,6 +402,7 @@ async function viewHome() {
         count: stats.mistakes || null,
         warning: stats.mistakes > 0,
       }),
+      action("#/glossary", tr("glossary"), tr("glossaryHint")),
     ),
     settingsPanel(),
     footer(),
@@ -790,6 +791,68 @@ async function viewExam() {
   }
 }
 
+// ---------- glossary ----------
+
+let glossaryPromise = null;
+
+async function viewGlossary() {
+  const nav = navId;
+  render(topBar(), h("p.muted", tr("loading")));
+  glossaryPromise ||= fetch("data/glossary.json").then((res) => {
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  });
+  let glossary;
+  try {
+    glossary = await glossaryPromise;
+  } catch {
+    glossaryPromise = null;
+    if (nav === navId) render(topBar(), h("p.notice", tr("loadError")));
+    return;
+  }
+  if (nav !== navId) return;
+
+  // Spanish speakers get the English column; everyone else their own language.
+  const lang = settings.lang === "es" ? "en" : settings.lang;
+  const fold = (text) => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+  const rows = [];
+  const sections = glossary.sections.map((section) => {
+    const list = h("dl.terms");
+    const el = h("section.gloss-section", h("h2.subtitle", section.title[settings.lang] || section.title.en), list);
+    for (const term of section.terms) {
+      const row = h("div.term", h("dt", { lang: "es" }, term.es), h("dd", { lang }, term[lang] || term.en));
+      list.append(row);
+      rows.push({ row, section: el, text: fold(`${term.es} ${term[lang] || ""} ${term.en}`) });
+    }
+    return el;
+  });
+
+  const empty = h("p.muted", { hidden: true }, tr("glossaryNoMatch"));
+  const search = h("input.search", {
+    type: "search",
+    placeholder: tr("glossarySearch"),
+    "aria-label": tr("glossarySearch"),
+    oninput: () => {
+      const query = fold(search.value.trim());
+      const visible = new Set();
+      for (const r of rows) {
+        const show = !query || r.text.includes(query);
+        r.row.hidden = !show;
+        if (show) visible.add(r.section);
+      }
+      for (const section of sections) section.hidden = !visible.has(section);
+      empty.hidden = visible.size > 0;
+    },
+  });
+
+  render(
+    topBar(),
+    h("section", h("h1.title", tr("glossary")), h("p.gloss-intro", tr("glossaryIntro")), search, empty, sections),
+    footer(),
+  );
+}
+
 // ---------- router ----------
 
 let keyHandler = null;
@@ -800,6 +863,7 @@ const ROUTES = {
   practice: [viewPractice, "practice"],
   exam: [viewExam, "exam"],
   review: [() => viewPractice("review"), "review"],
+  glossary: [viewGlossary, "glossary"],
 };
 
 function route() {

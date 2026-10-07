@@ -723,3 +723,58 @@ a.btn {
   padding: 1.5rem 0;
   border-bottom: 2px solid var(--line);
 }
+
+/* ---------- Glossary ---------- */
+
+.gloss-intro {
+  margin: 0.75rem 0 1.25rem;
+  color: var(--muted);
+}
+
+.search {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0 1rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+.gloss-section {
+  margin-top: 2rem;
+}
+
+.terms {
+  margin: 0.75rem 0 0;
+}
+
+/* Spanish term and its translation side by side, stacked on narrow screens */
+.term {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 0.25rem 1.5rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.term dt {
+  font-weight: 700;
+}
+
+.term dd {
+  margin: 0;
+}
+
+@media (max-width: 30rem) {
+  .term {
+    grid-template-columns: 1fr;
+  }
+
+  .term dd {
+    color: var(--muted);
+  }
+}
+
+[hidden] {
+  display: none !important;
+}

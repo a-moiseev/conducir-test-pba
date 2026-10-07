@@ -33,7 +33,7 @@ tools/i18n.py                 translation store: pending / apply / check
 data/pba/questions.json       parsed bank (Spanish), one record per question
 data/pba/images/              question images cropped from the PDF
 data/pba/i18n/ru.json         Russian translations, keyed by a hash of the Spanish text
-data/pba/i18n/glossary.md     terminology used for translations
+data/pba/glossary.json        road terms (es / en / ru): translation reference and glossary page
 ```
 
 ### Question record
@@ -59,6 +59,12 @@ data/pba/i18n/glossary.md     terminology used for translations
 - `correct`: indices of the correct options; empty when the source has no answer key.
 
 ### Translations
+
+Style: accurate and neutral, plain "you"; options must stay exactly as (un)obvious as in the
+original, so a translation never hints at the answer. References to options ("A y B") keep Latin
+letters. Argentine documents and terms with no local equivalent keep the Spanish name in
+parentheses (cédula azul, VTV, patente), because that is what the exam calls them. Terminology
+follows `data/pba/glossary.json`.
 
 Translations are stored per Spanish string, not per question, so they survive re-parsing and
 identical strings ("Verdadero.", "Ninguna de las anteriores.") are translated once:
@@ -88,7 +94,7 @@ backend. Progress is kept in the browser's `localStorage`.
 ```
 site/index.html
 site/css/style.css
-site/js/app.js              views and routing (#/, #/practice, #/exam)
+site/js/app.js              views and routing (#/, #/practice, #/exam, #/review, #/glossary)
 site/js/lib/                pure logic, unit-tested with node --test
   progress.js               Leitner boxes and next-question selection
   readiness.js              chance of passing the real exam
@@ -102,6 +108,12 @@ because the real exam is in Spanish. The mock exam is Spanish-only by default.
 
 The mock exam draws 5 eliminatory and 35 regular questions, shows results only at the end,
 and feeds its answers into practice progress. A running exam survives a page reload.
+
+"Review mistakes" drills only the questions whose latest answer (in practice or an exam) was
+wrong; a right answer takes a question out of that pool.
+
+The glossary page lists road terms from `data/pba/glossary.json` with a translation into the
+interface language (English for the Spanish interface); search ignores accents.
 
 Practice uses five Leitner boxes: a wrong answer sends a question back to box 1 (it returns
 after a few other questions), three right answers in a row make it "learned".

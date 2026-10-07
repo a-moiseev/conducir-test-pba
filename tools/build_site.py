@@ -1,7 +1,8 @@
 """Build per-category question files for the static site.
 
-Reads data/pba/questions.json and data/pba/i18n/<lang>.json, writes
-site/data/<category>.json and copies the images those questions use to site/img/.
+Reads data/pba/questions.json, data/pba/i18n/<lang>.json and data/pba/glossary.json,
+writes site/data/<category>.json and site/data/glossary.json, and copies the images the
+questions use to site/img/.
 Both directories are built aside and swapped in only when everything succeeded.
 
 Usage: .venv/bin/python tools/build_site.py [data_dir] [site_dir]
@@ -165,6 +166,12 @@ def main():
         print(f"{cat.upper()}: {len(items)} questions ({elim} eliminatory), left out {dict(dropped)}")
         for w in warnings:
             print(f"  warning: {w}")
+
+    # Glossary page data: the same file the translations follow, minus the editor's note.
+    glossary = json.loads((data / "glossary.json").read_text(encoding="utf-8"))
+    glossary.pop("note", None)
+    (data_tmp / "glossary.json").write_text(
+        json.dumps(glossary, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     for name in sorted(used_images):
         shutil.copy2(data / "images" / name, img_tmp / name)

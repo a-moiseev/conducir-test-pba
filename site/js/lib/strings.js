@@ -6,6 +6,9 @@ export const LANG_NAMES = { es: "Español", en: "English", ru: "Русский" 
 
 const STRINGS = {
   es: {
+    glossaryIntro: "Términos que aparecen en las preguntas del examen, con su traducción al inglés.",
+    glossarySearch: "Buscar un término",
+    glossaryNoMatch: "Ningún término coincide con la búsqueda.",
     reviewNone: "Acá van a aparecer las preguntas que respondas mal",
     reviewLeft: "Errores por repasar: {count}",
     reviewEmpty: "No tenés errores para repasar. Las preguntas que respondas mal en la práctica o en un simulacro van a aparecer acá.",
@@ -51,7 +54,7 @@ const STRINGS = {
     review: "Repasar errores",
     reviewHint: "Las preguntas que respondiste mal",
     glossary: "Glosario",
-    glossaryHint: "Términos viales en español",
+    glossaryHint: "Términos viales con su traducción",
     settings: "Ajustes",
     language: "Idioma",
     licenseClass: "Clase de licencia",
@@ -83,6 +86,9 @@ const STRINGS = {
     back: "Volver al inicio",
   },
   en: {
+    glossaryIntro: "Terms that come up in the exam questions, with their English meaning.",
+    glossarySearch: "Search for a term",
+    glossaryNoMatch: "No term matches your search.",
     reviewNone: "Questions you get wrong will show up here",
     reviewLeft: "Mistakes left: {count}",
     reviewEmpty: "No mistakes to review. Questions you get wrong in practice or a mock exam will show up here.",
@@ -160,6 +166,9 @@ const STRINGS = {
     back: "Back to home",
   },
   ru: {
+    glossaryIntro: "Термины, которые встречаются в вопросах экзамена, с переводом на русский.",
+    glossarySearch: "Найти термин",
+    glossaryNoMatch: "Такого термина нет.",
     reviewNone: "Здесь появятся вопросы, на которые вы ответите неверно",
     reviewLeft: "Осталось ошибок: {count}",
     reviewEmpty: "Ошибок для повторения нет. Сюда попадут вопросы, на которые вы ответите неверно в практике или на пробном экзамене.",
@@ -205,7 +214,7 @@ const STRINGS = {
     review: "Работа над ошибками",
     reviewHint: "Вопросы, на которые вы ответили неверно",
     glossary: "Глоссарий",
-    glossaryHint: "Испанские дорожные термины",
+    glossaryHint: "Испанские дорожные термины с переводом",
     settings: "Параметры",
     language: "Язык",
     licenseClass: "Класс прав",
