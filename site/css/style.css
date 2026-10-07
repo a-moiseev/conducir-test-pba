@@ -1,25 +1,67 @@
 /* Visual language: Argentine road signage. Colours are semantic, never decorative:
-   informative blue = actions, regulatory red = eliminatory / wrong, motorway green = correct,
-   preventive yellow = mistakes to review. One typeface: Overpass (Highway Gothic lineage). */
+   motorway-sign green = actions and correct answers, regulatory red = eliminatory / wrong,
+   reflective yellow = selection and mistakes to review.
+   Type: Overpass (Highway Gothic lineage) for Latin text and digits; Cyrillic falls back to
+   the system UI font on purpose (the font files below carry Latin only). */
+
+@font-face {
+  font-family: "Overpass";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/overpass-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Overpass";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/overpass-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Overpass";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/overpass-italic-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Overpass";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/overpass-italic-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
 
 :root {
   --paper: #ffffff;
-  --concrete: #f1f2f3;
-  --ink: #23262b;
-  --muted: #5d636b;
-  --line: #cfd3d8;
-  --blue: #0b4ea2; /* links and outlines */
-  --fill: #0b4ea2; /* filled buttons: white text must stay >= 4.5:1 */
+  --concrete: #f1f2f2;
+  --ink: #26292d;
+  --muted: #5f656c;
+  --line: #cdd1d4;
+  --blue: #00663d; /* links and outlines (motorway-sign green) */
+  --fill: #00663d; /* filled buttons: white text must stay >= 4.5:1 */
   --blue-ink: #ffffff;
-  --red: #c8102e;
-  --green: #1b7f3b;
-  --yellow: #f2b705;
-  --green-fill: #1b7f3b; /* same in both themes: white letters on top */
-  --red-fill: #b30f29;
+  --red: #c4161c;
+  --green: #00663d;
+  --yellow: #ffc20e; /* reflective yellow: selection, review */
+  --green-fill: #00663d; /* same in both themes: white letters on top */
+  --red-fill: #b3141a;
   --sign-face: #ffffff;
   --sign-ink: #1d2024;
 
-  --font: "Overpass", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font: "Overpass", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   /* Type scale: major third (1.25) from a 17px body */
   --t-sm: 0.875rem;
   --t-base: 1.0625rem;
@@ -37,13 +79,13 @@
   :root:not([data-theme="light"]) {
     --paper: #23262b;
     --concrete: #2b2f35;
-    --ink: #eef0ee;
-    --muted: #a7adb4;
-    --line: #444a52;
-    --blue: #6aa1ec;
-    --fill: #2360b5;
+    --ink: #f1f2f0;
+    --muted: #aab0b6;
+    --line: #464b51;
+    --blue: #5fc28f;
+    --fill: #00663d;
     --red: #ec4a5b;
-    --green: #3fae62;
+    --green: #3fb27a;
     color-scheme: dark;
   }
 }
@@ -51,13 +93,13 @@
 :root[data-theme="dark"] {
   --paper: #23262b;
   --concrete: #2b2f35;
-  --ink: #eef0ee;
-  --muted: #a7adb4;
-  --line: #444a52;
-  --blue: #6aa1ec;
-  --fill: #2360b5;
+  --ink: #f1f2f0;
+  --muted: #aab0b6;
+  --line: #464b51;
+  --blue: #5fc28f;
+  --fill: #00663d;
   --red: #ec4a5b;
-  --green: #3fae62;
+  --green: #3fb27a;
   color-scheme: dark;
 }
 
@@ -139,6 +181,8 @@ a {
 
 /* License class shown like the class code on the plastic licencia */
 .plate {
+  background: transparent;
+  cursor: pointer;
   display: inline-grid;
   place-items: center;
   min-width: 2rem;
@@ -161,7 +205,8 @@ a {
   cursor: pointer;
 }
 
-.icon-btn:hover {
+.icon-btn:hover,
+.plate:hover {
   background: var(--concrete);
 }
 
@@ -315,6 +360,7 @@ a {
 
 .action--warning {
   border-color: var(--yellow);
+  box-shadow: inset 6px 0 0 var(--yellow);
 }
 
 /* ---------- Choice lists (onboarding) and settings ---------- */
@@ -532,13 +578,13 @@ a {
 }
 
 .opt[aria-pressed="true"] {
-  border-color: var(--blue);
+  border-color: var(--ink);
 }
 
 .opt[aria-pressed="true"] .opt__key {
-  background: var(--fill);
-  border-color: var(--fill);
-  color: var(--blue-ink);
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: #1d1f22;
 }
 
 .opt--right {
@@ -685,7 +731,7 @@ a.btn {
 }
 
 .nav-cell[aria-current="step"] {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--yellow);
   outline-offset: 1px;
 }
 

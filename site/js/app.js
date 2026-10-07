@@ -92,7 +92,7 @@ function h(spec, attrs, ...children) {
     else if (key === "html") el.innerHTML = value; // only for static SVG icons
     else el.setAttribute(key, value === true ? "" : value);
   }
-  for (const child of children.flat()) {
+  for (const child of children.flat(Infinity)) {  // children may nest arrays (card.nodes, image lists)
     if (child == null || child === false) continue;
     el.append(child instanceof Node ? child : document.createTextNode(String(child)));
   }
@@ -131,19 +131,41 @@ function topBar() {
   return h(
     "header.bar",
     h("a.bar__home", { href: "#/" }, tr("appName")),
-    settings.cls && h("span.plate", { title: tr("licenseClass") }, settings.cls),
+    // The license-class plate doubles as the class switch (there are only two classes).
+    settings.cls &&
+      h(
+        "button.plate",
+        {
+          type: "button",
+          "aria-label": tr("switchClass", { cls: otherClass() }),
+          title: tr("switchClass", { cls: otherClass() }),
+          onclick: () => {
+            saveSettings({ cls: otherClass() });
+            route();
+          },
+        },
+        settings.cls,
+      ),
     h("button.icon-btn", {
       type: "button",
       "data-theme-toggle": true,
       "aria-label": dark ? tr("themeLight") : tr("themeDark"),
       html: dark ? ICON_SUN : ICON_MOON,
       onclick: () => {
-        saveSettings({ theme: isDark() ? "light" : "dark" });
+        // Switching to what the system already uses means "follow the system" again,
+        // so the single toggle can always get back to the automatic theme.
+        const next = isDark() ? "light" : "dark";
+        const system = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        saveSettings({ theme: next === system ? null : next });
         applyTheme();
         refreshThemeButtons();
       },
     }),
   );
+}
+
+function otherClass() {
+  return CLASSES.find((c) => c !== settings.cls);
 }
 
 // Theme changes never re-render the page: an answered question must keep its state.
@@ -152,9 +174,6 @@ function refreshThemeButtons() {
   for (const btn of document.querySelectorAll("[data-theme-toggle]")) {
     btn.innerHTML = dark ? ICON_SUN : ICON_MOON;
     btn.setAttribute("aria-label", dark ? tr("themeLight") : tr("themeDark"));
-  }
-  for (const btn of document.querySelectorAll("[data-theme-choice]")) {
-    btn.setAttribute("aria-pressed", String((btn.dataset.themeChoice || null) === (settings.theme || null)));
   }
 }
 
@@ -170,18 +189,16 @@ function footer() {
   );
 }
 
-function segmented(label, options, current, onPick, dataName) {
+function segmented(label, options, current, onPick) {
   return h(
     "div.field",
     h("span.field__label", label),
     h(
       "div.segmented",
       { role: "group", "aria-label": label },
-      options.map(([value, text]) => {
-        const attrs = { type: "button", "aria-pressed": String(value === current), onclick: () => onPick(value) };
-        if (dataName) attrs[`data-${dataName}`] = value || "";
-        return h("button", attrs, text);
-      }),
+      options.map(([value, text]) =>
+        h("button", { type: "button", "aria-pressed": String(value === current), onclick: () => onPick(value) }, text),
+      ),
     ),
   );
 }
@@ -414,27 +431,11 @@ function settingsPanel() {
   return h(
     "section.settings",
     { "aria-label": tr("settings") },
-    h("h2.subtitle", tr("settings")),
     segmented(tr("language"), UI_LANGS.map((l) => [l, LANG_NAMES[l]]), settings.lang, (lang) => {
       saveSettings({ lang });
       applyTheme();
       route();
     }),
-    segmented(tr("licenseClass"), CLASSES.map((c) => [c, tr(`class${c}`)]), settings.cls, (cls) => {
-      saveSettings({ cls });
-      route();
-    }),
-    segmented(
-      tr("theme"),
-      [[null, tr("themeAuto")], ["light", tr("themeLight")], ["dark", tr("themeDark")]],
-      settings.theme,
-      (theme) => {
-        saveSettings({ theme });
-        applyTheme();
-        refreshThemeButtons();
-      },
-      "theme-choice",
-    ),
     h(
       "button.link-btn",
       {

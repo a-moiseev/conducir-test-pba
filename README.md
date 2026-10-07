@@ -131,9 +131,12 @@ where `pE` and `pN` are the average chances of answering an eliminatory / regula
 correctly, estimated from the box each question is in.
 
 The visual language borrows from Argentine road signage: the pass estimate is drawn as a
-speed-limit roundel, colours are semantic (informative blue for actions, regulatory red for
-eliminatory questions and wrong answers, motorway green for correct ones), and the single
-typeface is Overpass, a descendant of the Highway Gothic road-sign lettering.
+speed-limit roundel, colours are semantic (motorway-sign green for actions and correct answers,
+regulatory red for eliminatory questions and wrong answers, reflective yellow for the selected
+option and mistakes to review). Latin text and digits use Overpass, a descendant of the Highway
+Gothic road-sign lettering, self-hosted in `site/fonts/` with Latin glyphs only (SIL Open Font
+License, see `site/fonts/OFL.txt`); Cyrillic deliberately falls back to the system UI font.
+Light and dark themes; the class plate in the header switches between class A and B.
 
 ## Usage
 
