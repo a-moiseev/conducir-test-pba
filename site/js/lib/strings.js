@@ -6,6 +6,10 @@ export const LANG_NAMES = { es: "Español", en: "English", ru: "Русский" 
 
 const STRINGS = {
   es: {
+    reviewNone: "Acá van a aparecer las preguntas que respondas mal",
+    reviewLeft: "Errores por repasar: {count}",
+    reviewEmpty: "No tenés errores para repasar. Las preguntas que respondas mal en la práctica o en un simulacro van a aparecer acá.",
+    reviewDone: "Repasaste todos tus errores.",
     examResume: "Tenés un simulacro sin terminar",
     examRules:
       "{total} preguntas de tu clase, {elim} de ellas eliminatorias. Aprobás con {needed} respuestas correctas y todas las eliminatorias bien. Los resultados se ven al final, como en el examen real.",
@@ -79,6 +83,10 @@ const STRINGS = {
     back: "Volver al inicio",
   },
   en: {
+    reviewNone: "Questions you get wrong will show up here",
+    reviewLeft: "Mistakes left: {count}",
+    reviewEmpty: "No mistakes to review. Questions you get wrong in practice or a mock exam will show up here.",
+    reviewDone: "You have gone through all your mistakes.",
     examResume: "You have an unfinished mock exam",
     examRules:
       "{total} questions for your class, {elim} of them eliminatory. You pass with {needed} correct answers and every eliminatory question right. Results are shown at the end, as in the real exam.",
@@ -152,6 +160,10 @@ const STRINGS = {
     back: "Back to home",
   },
   ru: {
+    reviewNone: "Здесь появятся вопросы, на которые вы ответите неверно",
+    reviewLeft: "Осталось ошибок: {count}",
+    reviewEmpty: "Ошибок для повторения нет. Сюда попадут вопросы, на которые вы ответите неверно в практике или на пробном экзамене.",
+    reviewDone: "Все ошибки отработаны.",
     examResume: "Есть незаконченный пробный экзамен",
     examRules:
       "{total} вопросов для вашего класса, из них {elim} критических. Экзамен сдан, если верных ответов не меньше {needed} и все критические вопросы без ошибок. Результат — в конце, как на настоящем экзамене.",

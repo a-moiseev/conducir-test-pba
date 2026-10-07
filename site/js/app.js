@@ -42,7 +42,7 @@ async function loadBank(cls) {
 
 const progressKey = (cls) => `progress:${cls}`;
 const recentKey = (cls) => `recent:${cls}`;
-const currentKey = (cls) => `current:${cls}`;
+const currentKey = (cls, mode = "practice") => (mode === "review" ? `currentReview:${cls}` : `current:${cls}`);
 const examKey = (cls) => `exam:${cls}`;
 const historyKey = (cls) => `examHistory:${cls}`;
 
@@ -358,11 +358,11 @@ function roundel(value, unit, label) {
   );
 }
 
-function action(href, label, hint, { primary = false, count = null } = {}) {
+function action(href, label, hint, { primary = false, warning = false, count = null } = {}) {
   return h(
     "li",
     h(
-      primary ? "a.action.action--primary" : "a.action",
+      primary ? "a.action.action--primary" : warning ? "a.action.action--warning" : "a.action",
       { href },
       h("span.action__label", label),
       h("span.action__hint", hint),
@@ -398,6 +398,10 @@ async function viewHome() {
       "ul.actions",
       action("#/practice", tr("practice"), tr("practiceHint"), { primary: true }),
       action("#/exam", tr("exam"), examRunning ? tr("examResume") : tr("examHint", { total: EXAM.questions })),
+      action("#/review", tr("review"), stats.mistakes ? tr("reviewHint") : tr("reviewNone"), {
+        count: stats.mistakes || null,
+        warning: stats.mistakes > 0,
+      }),
     ),
     settingsPanel(),
     footer(),
@@ -436,6 +440,7 @@ function settingsPanel() {
         onclick: () => {
           if (!window.confirm(tr("resetConfirm", { cls: settings.cls }))) return;
           for (const key of [progressKey, recentKey, currentKey, examKey, historyKey]) remove(key(settings.cls));
+          remove(currentKey(settings.cls, "review"));
           route();
         },
       },
@@ -446,22 +451,44 @@ function settingsPanel() {
 
 // ---------- practice ----------
 
-async function viewPractice() {
+// mode "practice": the whole bank, weakest first; mode "review": only questions whose
+// latest answer was wrong — a right answer takes a question out of the review pool.
+async function viewPractice(mode = "practice") {
   const loaded = await bankForView();
   if (!loaded) return;
   const { bank, cls } = loaded;
   const questions = bank.questions;
+  const review = mode === "review";
   const byId = new Map(questions.map((q) => [q.id, q]));
   let records = load(progressKey(cls), {});
   let recent = load(recentKey(cls), []);
   let answeredInSession = 0;
 
+  const pool = () => (review ? questions.filter((q) => records[q.id]?.miss) : questions);
+
   function nextQuestion() {
     // Resume the question that was on screen before a reload.
-    const saved = byId.get(load(currentKey(cls), null));
-    const q = saved || pickNext(questions, records, recent);
-    save(currentKey(cls), q.id);
+    let saved = byId.get(load(currentKey(cls, mode), null));
+    // A saved review question may have been fixed in practice since.
+    if (saved && review && !records[saved.id]?.miss) saved = null;
+    const candidates = pool();
+    if (!saved && candidates.length === 0) return reviewEmpty();
+    const q = saved || pickNext(candidates, records, recent);
+    save(currentKey(cls, mode), q.id);
     showQuestion(q);
+  }
+
+  function reviewEmpty() {
+    keyHandler = null;
+    render(
+      topBar(),
+      h(
+        "section.stack",
+        h("h1.title", tr("review")),
+        h("p", answeredInSession ? tr("reviewDone") : tr("reviewEmpty")),
+        h("div.btn-row", h("a.btn", { href: "#/practice" }, tr("practice")), h("a.btn.btn--quiet", { href: "#/" }, tr("home"))),
+      ),
+    );
   }
 
   function showQuestion(q) {
@@ -480,7 +507,9 @@ async function viewPractice() {
     }
 
     function updateLearned() {
-      learned.textContent = tr("learnedOf", { learned: summary(questions, records).mastered, total: questions.length });
+      learned.textContent = review
+        ? tr("reviewLeft", { count: pool().length })
+        : tr("learnedOf", { learned: summary(questions, records).mastered, total: questions.length });
     }
 
     function pick(orig) {
@@ -496,7 +525,7 @@ async function viewPractice() {
       records = recordAnswers(cls, [[q.id, ok]]);
       recent = [...recent, q.id].slice(-RECENT_WINDOW);
       save(recentKey(cls), recent);
-      remove(currentKey(cls));
+      remove(currentKey(cls, mode));
       answeredInSession += 1;
       card.reveal();
       verdict.textContent = ok ? tr("correct") : tr("wrong");
@@ -514,7 +543,11 @@ async function viewPractice() {
       topBar(),
       h(
         "article",
-        h("div.qhead", h("h1.qhead__n", tr("questionN", { n: answeredInSession + 1 })), h("a", { href: "#/" }, tr("home"))),
+        h(
+          "div.qhead",
+          h("h1.qhead__n", review ? tr("review") : tr("questionN", { n: answeredInSession + 1 })),
+          h("a", { href: "#/" }, tr("home")),
+        ),
         settings.lang === "en" && !hasTranslation(q, "en") && h("p.notice", tr("noTranslation")),
         card.nodes,
         verdict,
@@ -766,6 +799,7 @@ const ROUTES = {
   "": [viewHome, null],
   practice: [viewPractice, "practice"],
   exam: [viewExam, "exam"],
+  review: [() => viewPractice("review"), "review"],
 };
 
 function route() {
