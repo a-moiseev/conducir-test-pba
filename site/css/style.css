@@ -466,6 +466,15 @@ a {
   margin-bottom: 0.75rem;
 }
 
+.qhead__links {
+  display: inline-flex;
+  gap: 1rem;
+}
+
+.link-btn--plain {
+  color: var(--blue);
+}
+
 .qhead__n {
   font-size: var(--t-base);
   font-weight: 800;
@@ -823,4 +832,37 @@ a.btn {
 
 [hidden] {
   display: none !important;
+}
+
+.gloss-dialog {
+  width: min(40rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  padding: 0 1.25rem 1.5rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.gloss-dialog::backdrop {
+  background: rgba(20, 22, 25, 0.55);
+}
+
+/* the head stays put while the terms scroll */
+.gloss-dialog__head {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 -1.25rem 1rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 2px solid var(--ink);
+  background: var(--paper);
+}
+
+.gloss-dialog__head .btn {
+  width: auto;
+  min-height: 2.5rem;
 }

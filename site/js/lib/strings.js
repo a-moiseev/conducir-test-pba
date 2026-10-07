@@ -6,9 +6,10 @@ export const LANG_NAMES = { es: "Español", en: "English", ru: "Русский" 
 
 const STRINGS = {
   es: {
+    close: "Cerrar",
     switchClass: "Cambiar a la clase {cls}",
     examSpanish: "Las preguntas están solo en español, como en el examen real.",
-    glossaryIntro: "Términos que aparecen en las preguntas del examen, con su traducción al inglés.",
+    glossaryIntro: "Términos que aparecen en las preguntas del examen.",
     glossarySearch: "Buscar un término",
     glossaryNoMatch: "Ningún término coincide con la búsqueda.",
     reviewNone: "Acá van a aparecer las preguntas que respondas mal",
@@ -78,10 +79,11 @@ const STRINGS = {
     disclaimer:
       "Herramienta no oficial. Las preguntas y respuestas salen del cuestionario publicado por la Dirección Provincial de Política y Seguridad Vial; el examen real puede variar.",
     sourceLink: "Cuestionario oficial (PDF)",
-    codeLink: "Código fuente",
+    codeLink: "GitHub",
     back: "Volver al inicio",
   },
   en: {
+    close: "Close",
     switchClass: "Switch to class {cls}",
     examSpanish: "Questions are in Spanish only, as in the real exam.",
     glossaryIntro: "Terms that come up in the exam questions, with their English meaning.",
@@ -154,10 +156,11 @@ const STRINGS = {
     disclaimer:
       "Unofficial tool. Questions and answers come from the bank published by the provincial road safety office; the real exam may differ.",
     sourceLink: "Official question bank (PDF)",
-    codeLink: "Source code",
+    codeLink: "GitHub",
     back: "Back to home",
   },
   ru: {
+    close: "Закрыть",
     switchClass: "Переключить на класс {cls}",
     examSpanish: "Вопросы только на испанском, как на настоящем экзамене.",
     glossaryIntro: "Термины, которые встречаются в вопросах экзамена, с переводом на русский.",
@@ -230,7 +233,7 @@ const STRINGS = {
     disclaimer:
       "Неофициальный тренажёр. Вопросы и ответы взяты из вопросника, опубликованного дорожной службой провинции; на настоящем экзамене они могут отличаться.",
     sourceLink: "Официальный вопросник (PDF)",
-    codeLink: "Исходный код",
+    codeLink: "GitHub",
     back: "На главную",
   },
 };

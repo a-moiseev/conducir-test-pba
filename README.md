@@ -116,8 +116,10 @@ and feeds its answers into practice progress. A running exam survives a page rel
 "Review mistakes" drills only the questions whose latest answer (in practice or an exam) was
 wrong; a right answer takes a question out of that pool.
 
-The glossary page lists road terms from `data/pba/glossary.json`, alphabetically within each section, with a translation into the
-interface language (English for the Spanish interface); search ignores accents.
+The glossary lists road terms from `data/pba/glossary.json`, alphabetically within each
+section, with their translation into the interface language; search ignores accents. Practice and
+review open it in a dialog over the question, so looking up a word keeps the question's state.
+The mock exam has no glossary (neither does the real one), and the Spanish interface has none at all.
 
 Practice uses five Leitner boxes: a wrong answer sends a question back to box 1 (it returns
 after a few other questions), three right answers in a row make it "learned".

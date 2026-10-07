@@ -420,7 +420,7 @@ async function viewHome() {
         count: stats.mistakes || null,
         warning: stats.mistakes > 0,
       }),
-      action("#/glossary", tr("glossary"), tr("glossaryHint")),
+      hasGlossary() && action("#/glossary", tr("glossary"), tr("glossaryHint")),
     ),
     settingsPanel(),
     footer(),
@@ -549,7 +549,12 @@ async function viewPractice(mode = "practice") {
         h(
           "div.qhead",
           h("h1.qhead__n", review ? tr("review") : tr("questionN", { n: answeredInSession + 1 })),
-          h("a", { href: "#/" }, tr("home")),
+          h(
+            "span.qhead__links",
+            hasGlossary() &&
+              h("button.link-btn.link-btn--plain", { type: "button", onclick: openGlossaryDialog }, tr("glossary")),
+            h("a", { href: "#/" }, tr("home")),
+          ),
         ),
         settings.lang === "en" && !hasTranslation(q, "en") && h("p.notice", tr("noTranslation")),
         card.nodes,
@@ -788,34 +793,29 @@ async function viewExam() {
 
 // ---------- glossary ----------
 
+// Spanish speakers need no glossary of Spanish terms.
+const hasGlossary = () => settings.lang !== "es";
+
 let glossaryPromise = null;
 
-async function viewGlossary() {
-  const nav = navId;
-  render(topBar(), h("p.muted", tr("loading")));
+function loadGlossary() {
   glossaryPromise ||= fetch("data/glossary.json").then((res) => {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json();
   });
-  let glossary;
-  try {
-    glossary = await glossaryPromise;
-  } catch {
-    glossaryPromise = null;
-    if (nav === navId) render(topBar(), h("p.notice", tr("loadError")));
-    return;
-  }
-  if (nav !== navId) return;
+  glossaryPromise.catch(() => (glossaryPromise = null));
+  return glossaryPromise;
+}
 
-  // Spanish speakers get the English column; everyone else their own language.
-  const lang = settings.lang === "es" ? "en" : settings.lang;
+// Search box, "no match" line and the term sections; shared by the page and the dialog.
+function glossaryBody(glossary) {
+  const lang = settings.lang;
   const fold = (text) => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-
   const collator = new Intl.Collator("es", { sensitivity: "base" });
   const rows = [];
   const sections = glossary.sections.map((section) => {
     const list = h("dl.terms");
-    const el = h("section.gloss-section", h("h2.subtitle", section.title[settings.lang] || section.title.en), list);
+    const el = h("section.gloss-section", h("h2.subtitle", section.title[lang] || section.title.en), list);
     for (const term of [...section.terms].sort((x, y) => collator.compare(x.es, y.es))) {
       const row = h("div.term", h("dt", { lang: "es" }, term.es), h("dd", { lang }, term[lang] || term.en));
       list.append(row);
@@ -841,18 +841,65 @@ async function viewGlossary() {
       empty.hidden = visible.size > 0;
     },
   });
+  return { search, nodes: [search, empty, sections] };
+}
 
+async function viewGlossary() {
+  if (!hasGlossary()) return (location.hash = "#/");
+  const nav = navId;
+  render(topBar(), h("p.muted", tr("loading")));
+  let glossary;
+  try {
+    glossary = await loadGlossary();
+  } catch {
+    if (nav === navId) render(topBar(), h("p.notice", tr("loadError")));
+    return;
+  }
+  if (nav !== navId) return;
   render(
     topBar(),
-    h("section", h("h1.title", tr("glossary")), h("p.gloss-intro", tr("glossaryIntro")), search, empty, sections),
+    h("section", h("h1.title", tr("glossary")), h("p.gloss-intro", tr("glossaryIntro")), glossaryBody(glossary).nodes),
     footer(),
   );
+}
+
+// The glossary over the current question: looking up a word keeps the question's state.
+async function openGlossaryDialog() {
+  const content = h("div", h("p.muted", tr("loading")));
+  const dialog = h(
+    "dialog.gloss-dialog",
+    { "aria-label": tr("glossary") },
+    h(
+      "div.gloss-dialog__head",
+      h("h2.subtitle", tr("glossary")),
+      h("button.btn.btn--quiet", { type: "button", onclick: () => dismiss() }, tr("close")),
+    ),
+    content,
+  );
+  function dismiss() {
+    if (dialog.open) dialog.close();
+    dialog.remove();
+  }
+  dialog.addEventListener("close", dismiss); // Esc
+  dialog.addEventListener("click", (e) => e.target === dialog && dismiss()); // backdrop
+  document.body.append(dialog);
+  dialog.showModal();
+  try {
+    const body = glossaryBody(await loadGlossary());
+    content.replaceChildren(...body.nodes.flat());
+    body.search.focus();
+  } catch {
+    content.replaceChildren(h("p.notice", tr("loadError")));
+  }
 }
 
 // ---------- router ----------
 
 let keyHandler = null;
-document.addEventListener("keydown", (e) => keyHandler && keyHandler(e));
+document.addEventListener("keydown", (e) => {
+  if (document.querySelector("dialog[open]")) return; // the glossary dialog has the keyboard
+  if (keyHandler) keyHandler(e);
+});
 
 const ROUTES = {
   "": [viewHome, null],
