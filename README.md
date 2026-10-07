@@ -1,0 +1,86 @@
+# Test de Conducir — Provincia de Buenos Aires
+
+A free practice tool for the **Province of Buenos Aires** (PBA) driver's-license theory exam,
+built on the official question bank, with Russian (and later English) translations.
+
+> Unofficial. The questions and answer keys come from the province's published study material;
+> the real exam may differ. Always check the official sources before your test.
+
+## Source
+
+The question bank is the official PDF published by the Dirección Provincial de Política y
+Seguridad Vial:
+[`cuestionario.pdf`](https://www.gba.gob.ar/static/seguridadvial/docs/cuestionario.pdf)
+— *Anexo I: Preguntas Examen Teórico Licencia de Conducir* (IF-2019-33101289-GDEBA-DPPYSVMGGP,
+Disposición 46/2019).
+
+The PDF has a real text layer, so the bank is parsed automatically:
+
+- the correct option is printed in green;
+- eliminatory questions are marked *(Pregunta de carácter eliminatorio)*;
+- bold headings split the bank into general questions (all license classes) and
+  class-specific sections (cars, motorcycles, trucks, taxis, …).
+
+Known gaps in the source: some questions have no answer key (most of them in the heavy-vehicle
+sections), and some answers predate later law changes (e.g. *Alcohol Cero*). These are reported
+by the parser and must not be "fixed" by guessing.
+
+## Repository layout
+
+```
+tools/parse_cuestionario.py   PDF -> data/pba/questions.json + data/pba/images/
+tools/i18n.py                 translation store: pending / apply / check
+data/pba/questions.json       parsed bank (Spanish), one record per question
+data/pba/images/              question images cropped from the PDF
+data/pba/i18n/ru.json         Russian translations, keyed by a hash of the Spanish text
+data/pba/i18n/glossary.md     terminology used for translations
+```
+
+### Question record
+
+```json
+{
+  "id": 0,
+  "page": 2,
+  "group": "general",
+  "section": "Preguntas para todas las clases: actores en la via publica",
+  "topic": "",
+  "type": "tf",
+  "eliminatory": false,
+  "notes": [],
+  "es": {"q": "…", "answers": ["Verdadero.", "Falso."]},
+  "correct": [0],
+  "images": ["0000.jpg"]
+}
+```
+
+- `group`: `general` (all classes), `auto`, `moto`, `carga`, `taxi`, `pasajeros`, …
+- `type`: `choice`, `tf` (true/false) or `multi` (several correct options).
+- `correct`: indices of the correct options; empty when the source has no answer key.
+
+### Translations
+
+Translations are stored per Spanish string, not per question, so they survive re-parsing and
+identical strings ("Verdadero.", "Ninguna de las anteriores.") are translated once:
+
+```json
+{"1948296a8f70": {"es": "Según la Organización…", "t": "По данным Всемирной…"}}
+```
+
+## Usage
+
+```sh
+make venv      # create .venv and install PyMuPDF
+make fetch     # download the official PDF into source/
+make parse     # rebuild data/pba from the PDF
+make i18n-check
+```
+
+Translation workflow:
+
+```sh
+.venv/bin/python tools/i18n.py pending ru --limit 200   # untranslated strings, in question order
+.venv/bin/python tools/i18n.py apply ru batch.json      # merge {key: translation}
+.venv/bin/python tools/i18n.py check ru                 # coverage, numbers, leftover Spanish
+.venv/bin/python tools/i18n.py prune ru                 # drop translations of removed strings
+```

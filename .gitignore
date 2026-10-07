@@ -1,0 +1,17 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Official PDF: large and re-downloadable with `make fetch`
+source/
+
+# Generated site data (built from data/ with `make site`)
+site/data/
+site/img/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+*.swp
