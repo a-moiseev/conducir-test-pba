@@ -26,7 +26,7 @@ sections), and some answers predate later law changes (e.g. *Alcohol Cero*). The
 unkeyed questions instead of guessing. For the car and motorcycle classes the missing keys are
 filled in by hand in `data/pba/answer_keys.json`, each with its basis: a keyed twin of the same
 question elsewhere in the bank, the official *Manual del Conductor*, Ley 24.449, or plain
-arithmetic. The site tells users when an answer key comes from there.
+arithmetic.
 
 ## Repository layout
 

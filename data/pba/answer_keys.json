@@ -1,5 +1,5 @@
 {
-  "note": "Answer keys for questions that the official PDF leaves unmarked. Each entry must match exactly one question (page + Spanish text) and name its options by their Spanish text. 'basis' is shown to users after they answer.",
+  "note": "Answer keys for questions that the official PDF leaves unmarked. Each entry must match exactly one question (page + Spanish text) and name its options by their Spanish text. 'basis' documents the source; it is not shipped to the site.",
   "keys": [
     {
       "page": 54,

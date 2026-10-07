@@ -143,8 +143,6 @@ def build_category(questions, ids, stores, spec):
             item["fixedOrder"] = True
         if q.get("images"):
             item["img"] = [f"img/{name}" for name in q["images"]]
-        if q.get("key_basis"):
-            item["keyBasis"] = q["key_basis"]  # key restored by us, not marked in the PDF
         for lang, store in stores.items():
             loc = localize(q, store)
             if loc:
