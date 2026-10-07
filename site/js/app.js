@@ -17,7 +17,8 @@ const app = document.getElementById("app");
 
 // ---------- state ----------
 
-const settings = { lang: null, cls: null, theme: null, examTranslation: false, ...load("settings", {}) };
+const settings = { lang: null, cls: null, theme: null, ...load("settings", {}) };
+delete settings.examTranslation; // the mock exam is always in Spanish now
 if (!UI_LANGS.includes(settings.lang)) settings.lang = null;
 if (!CLASSES.includes(settings.cls)) settings.cls = null;
 
@@ -597,7 +598,6 @@ async function viewExam() {
     stopTimer();
     keyHandler = null;
     const history = load(historyKey(cls), []);
-    const canTranslate = settings.lang !== "es" && bank.questions.some((q) => hasTranslation(q, settings.lang));
     render(
       topBar(),
       h(
@@ -605,13 +605,7 @@ async function viewExam() {
         h("h1.title", tr("exam")),
         h("p", tr("examRules", { total: EXAM.questions, elim: EXAM.eliminatory, needed: Math.ceil(EXAM.questions * EXAM.passRatio) })),
         h("p.muted", tr("examNoLimit")),
-        canTranslate &&
-          segmented(
-            tr("examLanguage"),
-            [[false, tr("examSpanishOnly")], [true, tr("examWithTranslation")]],
-            settings.examTranslation,
-            (value) => (saveSettings({ examTranslation: value }), examIntro()),
-          ),
+        h("p.muted", tr("examSpanish")),
         h(
           "button.btn",
           {
@@ -625,7 +619,6 @@ async function viewExam() {
                 pos: 0,
                 started: Date.now(),
                 elapsed: 0,
-                translate: canTranslate && settings.examTranslation,
               };
               persist();
               examQuestion();
@@ -663,7 +656,8 @@ async function viewExam() {
     const q = byId.get(id);
     const order = session.orders[id] || optionOrder(q);
     const selected = new Set(session.answers[id] || []);
-    const card = questionCard(q, { order, selected, translate: session.translate, onToggle: pick });
+    // Like the real exam: Spanish only.
+    const card = questionCard(q, { order, selected, translate: false, onToggle: pick });
 
     function pick(orig) {
       toggleIn(selected, orig, card.multi);
@@ -788,7 +782,7 @@ async function viewExam() {
           const card = questionCard(q, {
             order: session.orders[id] || optionOrder(q),
             selected: new Set(session.answers[id] || []),
-            translate: Boolean(session.translate),
+            translate: false,
           });
           card.reveal();
           return h("article.review-item", card.nodes, h("p.small", sourceLink(q)));
@@ -823,11 +817,12 @@ async function viewGlossary() {
   const lang = settings.lang === "es" ? "en" : settings.lang;
   const fold = (text) => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
+  const collator = new Intl.Collator("es", { sensitivity: "base" });
   const rows = [];
   const sections = glossary.sections.map((section) => {
     const list = h("dl.terms");
     const el = h("section.gloss-section", h("h2.subtitle", section.title[settings.lang] || section.title.en), list);
-    for (const term of section.terms) {
+    for (const term of [...section.terms].sort((x, y) => collator.compare(x.es, y.es))) {
       const row = h("div.term", h("dt", { lang: "es" }, term.es), h("dd", { lang }, term[lang] || term.en));
       list.append(row);
       rows.push({ row, section: el, text: fold(`${term.es} ${term[lang] || ""} ${term.en}`) });

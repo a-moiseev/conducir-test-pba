@@ -6,6 +6,7 @@ export const LANG_NAMES = { es: "Español", en: "English", ru: "Русский" 
 
 const STRINGS = {
   es: {
+    examSpanish: "Las preguntas están solo en español, como en el examen real.",
     keyRestored: "Esta respuesta no está marcada en el cuestionario oficial; la completamos nosotros.",
     glossaryIntro: "Términos que aparecen en las preguntas del examen, con su traducción al inglés.",
     glossarySearch: "Buscar un término",
@@ -18,9 +19,6 @@ const STRINGS = {
     examRules:
       "{total} preguntas de tu clase, {elim} de ellas eliminatorias. Aprobás con {needed} respuestas correctas y todas las eliminatorias bien. Los resultados se ven al final, como en el examen real.",
     examNoLimit: "El reglamento no fija un tiempo límite; el reloj solo te muestra cuánto tardás.",
-    examLanguage: "Idioma de las preguntas",
-    examSpanishOnly: "Solo español",
-    examWithTranslation: "Con traducción",
     examStart: "Empezar el simulacro",
     examHistory: "Simulacros anteriores",
     questionOf: "Pregunta {n} de {total}",
@@ -87,6 +85,7 @@ const STRINGS = {
     back: "Volver al inicio",
   },
   en: {
+    examSpanish: "Questions are in Spanish only, as in the real exam.",
     keyRestored: "The official question bank leaves this answer unmarked; we filled it in.",
     glossaryIntro: "Terms that come up in the exam questions, with their English meaning.",
     glossarySearch: "Search for a term",
@@ -99,9 +98,6 @@ const STRINGS = {
     examRules:
       "{total} questions for your class, {elim} of them eliminatory. You pass with {needed} correct answers and every eliminatory question right. Results are shown at the end, as in the real exam.",
     examNoLimit: "The rules set no time limit; the clock only shows how long you take.",
-    examLanguage: "Question language",
-    examSpanishOnly: "Spanish only",
-    examWithTranslation: "With translation",
     examStart: "Start the mock exam",
     examHistory: "Previous mock exams",
     questionOf: "Question {n} of {total}",
@@ -168,6 +164,7 @@ const STRINGS = {
     back: "Back to home",
   },
   ru: {
+    examSpanish: "Вопросы только на испанском, как на настоящем экзамене.",
     keyRestored: "В официальном вопроснике ответ не отмечен, мы восстановили его.",
     glossaryIntro: "Термины, которые встречаются в вопросах экзамена, с переводом на русский.",
     glossarySearch: "Найти термин",
@@ -180,9 +177,6 @@ const STRINGS = {
     examRules:
       "{total} вопросов для вашего класса, из них {elim} критических. Экзамен сдан, если верных ответов не меньше {needed} и все критические вопросы без ошибок. Результат — в конце, как на настоящем экзамене.",
     examNoLimit: "Правила не ограничивают время; часы только показывают, сколько вы потратили.",
-    examLanguage: "Язык вопросов",
-    examSpanishOnly: "Только испанский",
-    examWithTranslation: "С переводом",
     examStart: "Начать экзамен",
     examHistory: "Прошлые попытки",
     questionOf: "Вопрос {n} из {total}",

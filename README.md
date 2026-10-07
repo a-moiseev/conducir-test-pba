@@ -108,7 +108,7 @@ site/js/lib/                pure logic, unit-tested with node --test
 ```
 
 Questions are shown in the selected language with the Spanish original always underneath,
-because the real exam is in Spanish. The mock exam is Spanish-only by default.
+because the real exam is in Spanish. The mock exam is in Spanish only, like the real one.
 
 The mock exam draws 5 eliminatory and 35 regular questions, shows results only at the end,
 and feeds its answers into practice progress. A running exam survives a page reload.
@@ -116,7 +116,7 @@ and feeds its answers into practice progress. A running exam survives a page rel
 "Review mistakes" drills only the questions whose latest answer (in practice or an exam) was
 wrong; a right answer takes a question out of that pool.
 
-The glossary page lists road terms from `data/pba/glossary.json` with a translation into the
+The glossary page lists road terms from `data/pba/glossary.json`, alphabetically within each section, with a translation into the
 interface language (English for the Spanish interface); search ignores accents.
 
 Practice uses five Leitner boxes: a wrong answer sends a question back to box 1 (it returns
