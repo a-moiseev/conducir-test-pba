@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test de Conducir PBA</title>
+  <meta name="description" content="Práctica gratuita del examen teórico de manejo de la Provincia de Buenos Aires con las preguntas oficiales.">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#23262b" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,400;0,700;0,800;1,400&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Apply the saved theme before first paint to avoid a flash.
+    try {
+      const s = JSON.parse(localStorage.getItem("pba:settings") || "{}");
+      if (s.theme) document.documentElement.dataset.theme = s.theme;
+    } catch {}
+  </script>
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <main id="app" class="page" aria-live="polite"></main>
+  <noscript>Esta página necesita JavaScript.</noscript>
+</body>
+</html>

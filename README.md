@@ -80,6 +80,38 @@ identical strings ("Verdadero.", "Ninguna de las anteriores.") are translated on
   ("Ambas respuestas, A y B…", "Ninguna de las anteriores"): their options are not shuffled;
 - both output directories are built aside and swapped in only after a successful build.
 
+## Site
+
+`site/` is a static single-page app: plain HTML, CSS and ES modules, no build step, no
+backend. Progress is kept in the browser's `localStorage`.
+
+```
+site/index.html
+site/css/style.css
+site/js/app.js              views and routing (#/, #/practice)
+site/js/lib/                pure logic, unit-tested with node --test
+  progress.js               Leitner boxes and next-question selection
+  readiness.js              chance of passing the real exam
+  exam-rules.js             official exam format
+  question.js, strings.js, storage.js, random.js
+```
+
+Practice uses five Leitner boxes: a wrong answer sends a question back to box 1 (it returns
+after a few other questions), three right answers in a row make it "learned".
+
+The pass estimate follows the official rules (Manual del Conductor, Disposición 46/2019:
+40 questions, 5 of them eliminatory, at least 75 % correct and every eliminatory question right):
+
+    P(pass) = pE^5 * P(Binomial(35, pN) >= 25)
+
+where `pE` and `pN` are the average chances of answering an eliminatory / regular question
+correctly, estimated from the box each question is in.
+
+The visual language borrows from Argentine road signage: the pass estimate is drawn as a
+speed-limit roundel, colours are semantic (informative blue for actions, regulatory red for
+eliminatory questions and wrong answers, motorway green for correct ones), and the single
+typeface is Overpass, a descendant of the Highway Gothic road-sign lettering.
+
 ## Usage
 
 ```sh
@@ -88,7 +120,8 @@ make fetch     # download the official PDF into source/
 make parse     # rebuild data/pba from the PDF
 make i18n-check
 make site      # build site/data and site/img
-make test
+make test      # Python and JavaScript unit tests
+make serve     # preview at http://127.0.0.1:8000
 ```
 
 Translation workflow:

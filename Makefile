@@ -1,7 +1,7 @@
 PY := .venv/bin/python -I
 PDF_URL := https://www.gba.gob.ar/static/seguridadvial/docs/cuestionario.pdf
 
-.PHONY: venv fetch parse i18n-check site test
+.PHONY: venv fetch parse i18n-check site test serve
 
 venv:
 	python3 -m venv .venv
@@ -25,3 +25,8 @@ site:
 
 test:
 	.venv/bin/python -m unittest discover -s tests
+	npm test --silent
+
+# Local preview at http://127.0.0.1:8000 (run `make site` first)
+serve:
+	cd site && python3 -m http.server 8000 --bind 127.0.0.1
