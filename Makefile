@@ -1,7 +1,7 @@
 PY := .venv/bin/python -I
 PDF_URL := https://www.gba.gob.ar/static/seguridadvial/docs/cuestionario.pdf
 
-.PHONY: venv fetch parse i18n-check
+.PHONY: venv fetch parse i18n-check site test
 
 venv:
 	python3 -m venv .venv
@@ -18,3 +18,10 @@ parse:
 
 i18n-check:
 	$(PY) tools/i18n.py check ru
+
+# data/pba -> site/data/{a,b}.json + site/img/
+site:
+	$(PY) tools/build_site.py data/pba site
+
+test:
+	.venv/bin/python -m unittest discover -s tests

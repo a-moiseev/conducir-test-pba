@@ -67,6 +67,19 @@ identical strings ("Verdadero.", "Ninguna de las anteriores.") are translated on
 {"1948296a8f70": {"es": "Según la Organización…", "t": "По данным Всемирной…"}}
 ```
 
+### Site data
+
+`tools/build_site.py` turns the bank into one file per license category
+(`site/data/a.json`, `site/data/b.json`) and copies the images they use to `site/img/`:
+
+- category **A** (motorcycles) = general + motorcycle questions, **B** (cars) = general + car questions;
+- questions without an answer key and exact text duplicates are left out;
+- every question gets a content-based `id` (hash of its normalized text and image bytes), so
+  stored progress survives re-parsing and reordering;
+- `fixedOrder` marks true/false questions and questions whose options refer to each other
+  ("Ambas respuestas, A y B…", "Ninguna de las anteriores"): their options are not shuffled;
+- both output directories are built aside and swapped in only after a successful build.
+
 ## Usage
 
 ```sh
@@ -74,6 +87,8 @@ make venv      # create .venv and install PyMuPDF
 make fetch     # download the official PDF into source/
 make parse     # rebuild data/pba from the PDF
 make i18n-check
+make site      # build site/data and site/img
+make test
 ```
 
 Translation workflow:
