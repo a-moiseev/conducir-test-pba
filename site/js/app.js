@@ -4,19 +4,22 @@ import { t, UI_LANGS, LANG_NAMES } from "./lib/strings.js";
 import { optionOrder, isCorrect, isMulti, localized, hasTranslation } from "./lib/question.js";
 import { grade, pickNext, summary, RECENT_WINDOW } from "./lib/progress.js";
 import { readiness } from "./lib/readiness.js";
+import { drawExam, scoreExam } from "./lib/exam.js";
+import { EXAM } from "./lib/exam-rules.js";
 
 const CLASSES = ["A", "B"];
 const SOURCE_PDF = "https://www.gba.gob.ar/static/seguridadvial/docs/cuestionario.pdf";
 const REPO_URL = "https://github.com/a-moiseev/conducir-test-pba";
 const LETTERS = "ABCDEFGH";
+const HISTORY_LIMIT = 20;
 
 const app = document.getElementById("app");
 
 // ---------- state ----------
 
-const settings = { lang: null, cls: null, theme: null, showOriginal: false, ...load("settings", {}) };
-if (!["es", "en", "ru"].includes(settings.lang)) settings.lang = null;
-if (!["A", "B"].includes(settings.cls)) settings.cls = null;
+const settings = { lang: null, cls: null, theme: null, examTranslation: false, ...load("settings", {}) };
+if (!UI_LANGS.includes(settings.lang)) settings.lang = null;
+if (!CLASSES.includes(settings.cls)) settings.cls = null;
 
 function saveSettings(patch) {
   Object.assign(settings, patch);
@@ -40,6 +43,36 @@ async function loadBank(cls) {
 const progressKey = (cls) => `progress:${cls}`;
 const recentKey = (cls) => `recent:${cls}`;
 const currentKey = (cls) => `current:${cls}`;
+const examKey = (cls) => `exam:${cls}`;
+const historyKey = (cls) => `examHistory:${cls}`;
+
+// Grades answers into the stored progress (practice and exam both go through here).
+function recordAnswers(cls, results) {
+  const records = { ...load(progressKey(cls), {}) };
+  const now = Date.now();
+  for (const [id, ok] of results) records[id] = grade(records[id], ok, now);
+  save(progressKey(cls), records);
+  return records;
+}
+
+// A saved exam is usable only if every question still exists with the same options.
+function examSessionValid(session, byId) {
+  if (!session || !Array.isArray(session.ids)) return false;
+  return session.ids.every((id) => {
+    const q = byId.get(id);
+    if (!q) return false;
+    const n = q.es.answers.length;
+    const order = session.orders?.[id];
+    const answer = session.answers?.[id] || [];
+    const isPermutation = Array.isArray(order) && order.length === n && [...order].sort((a, b) => a - b).every((v, i) => v === i);
+    return isPermutation && answer.every((i) => Number.isInteger(i) && i >= 0 && i < n);
+  });
+}
+
+function stopTimer() {
+  clearInterval(timer);
+  timer = null;
+}
 
 // ---------- DOM helpers ----------
 
@@ -67,8 +100,9 @@ function h(spec, attrs, ...children) {
 
 const tr = (key, vars) => t(settings.lang || "es", key, vars);
 
-// Bumped on every navigation; async views check it after each await.
+// Bumped on every navigation; async views and timers check it before touching the page.
 let navId = 0;
+let timer = null;
 
 function render(...nodes) {
   app.replaceChildren(...nodes);
@@ -151,6 +185,111 @@ function segmented(label, options, current, onPick, dataName) {
   );
 }
 
+function sourceLink(q) {
+  return h(
+    "a",
+    { href: `${SOURCE_PDF}#page=${q.src.page}`, target: "_blank", rel: "noopener" },
+    tr("sourcePage", { page: q.src.page }),
+  );
+}
+
+function formatDuration(ms) {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const mm = String(Math.floor(s / 60)).padStart(2, "0");
+  return `${mm}:${String(s % 60).padStart(2, "0")}`;
+}
+
+// ---------- question card (practice, exam and reviews share it) ----------
+
+// Renders a question with its options. The translation, when there is one, is shown with
+// the Spanish original under it: the real exam is in Spanish. `translate: false` shows
+// Spanish only. Options are numbered by display position (A, B, C…).
+function questionCard(q, { order, selected, translate = true, onToggle }) {
+  const lang = translate ? settings.lang : "es";
+  const text = localized(q, lang);
+  const translated = hasTranslation(q, lang);
+  const multi = isMulti(q);
+
+  const optionButtons = order.map((orig, pos) => {
+    const btn = h(
+      "button",
+      {
+        type: "button",
+        class: multi ? "opt opt--multi" : "opt",
+        "aria-pressed": String(selected.has(orig)),
+        onclick: () => onToggle && onToggle(orig),
+      },
+      h("span.opt__key", LETTERS[pos]),
+      h(
+        "span.opt__text",
+        h("span", { lang: translated ? lang : "es" }, text.answers[orig]),
+        translated && h("span.original", { lang: "es" }, q.es.answers[orig]),
+      ),
+    );
+    btn.dataset.orig = orig;
+    return btn;
+  });
+
+  const nodes = [
+    q.eliminatory && h("p.badge-elim", { title: tr("eliminatoryHint") }, tr("eliminatory")),
+    h(
+      "h2.qtext",
+      h("span", { lang: translated ? lang : "es" }, text.q),
+      translated && h("span.original", { lang: "es" }, q.es.q),
+    ),
+    (q.img || []).map((src) => h("figure.qimg", h("img", { src, alt: "", loading: "eager" }))),
+    multi && h("p.multi-hint", tr("pickAll")),
+    h("ul.options", { "aria-label": multi ? tr("pickAll") : tr("pickOne") }, optionButtons.map((b) => h("li", b))),
+  ];
+
+  return {
+    nodes,
+    multi,
+    refresh() {
+      for (const btn of optionButtons) btn.setAttribute("aria-pressed", String(selected.has(Number(btn.dataset.orig))));
+    },
+    // Lock the options and mark right / wrong / untouched ones.
+    reveal() {
+      for (const btn of optionButtons) {
+        const orig = Number(btn.dataset.orig);
+        btn.disabled = true;
+        btn.removeAttribute("aria-pressed");
+        if (q.correct.includes(orig)) btn.classList.add("opt--right");
+        else if (selected.has(orig)) btn.classList.add("opt--wrong");
+        else btn.classList.add("opt--dim");
+      }
+    },
+  };
+}
+
+function toggleIn(selected, orig, multi) {
+  if (multi) selected.has(orig) ? selected.delete(orig) : selected.add(orig);
+  else {
+    selected.clear();
+    selected.add(orig);
+  }
+}
+
+// Letter/digit keys pick options; Enter presses `button` when nothing else has focus.
+function optionKeys(order, onPick, button) {
+  return (e) => {
+    if (e.target.closest("input, select, textarea") || e.metaKey || e.ctrlKey || e.altKey) return;
+    const pos = LETTERS.indexOf(e.key.toUpperCase());
+    const index = pos >= 0 ? pos : Number(e.key) - 1;
+    if (index >= 0 && index < order.length && onPick(order[index]) !== false) {
+      e.preventDefault();
+    } else if (
+      e.key === "Enter" &&
+      button &&
+      !button.disabled &&
+      (document.activeElement === document.body || document.activeElement === null)
+    ) {
+      e.preventDefault();
+      button.click();
+    }
+  };
+}
+
 // ---------- onboarding ----------
 
 function viewLanguage() {
@@ -211,41 +350,54 @@ async function bankForView() {
   }
 }
 
+function roundel(value, unit, label) {
+  return h(
+    "div.roundel",
+    { role: "img", "aria-label": label },
+    h("span.roundel__value", String(value), h("span.roundel__unit", unit)),
+  );
+}
+
+function action(href, label, hint, { primary = false, count = null } = {}) {
+  return h(
+    "li",
+    h(
+      primary ? "a.action.action--primary" : "a.action",
+      { href },
+      h("span.action__label", label),
+      h("span.action__hint", hint),
+      count != null && h("span.action__count", String(count)),
+    ),
+  );
+}
+
 async function viewHome() {
   const loaded = await bankForView();
   if (!loaded) return;
-  const { bank } = loaded;
-  const records = load(progressKey(settings.cls), {});
+  const { bank, cls } = loaded;
+  const records = load(progressKey(cls), {});
   const stats = summary(bank.questions, records);
   const chance = Math.round(readiness(bank.questions, records).pass * 100);
+  const exam = load(examKey(cls), null);
+  const byId = new Map(bank.questions.map((q) => [q.id, q]));
+  const examRunning = examSessionValid(exam, byId) && !exam.finished;
 
   render(
     topBar(),
     h(
       "section.hero",
-      h(
-        "div.roundel",
-        { role: "img", "aria-label": `${tr("chanceTitle")}: ${chance} %` },
-        h("span.roundel__value", String(chance), h("span.roundel__unit", "%")),
-      ),
+      roundel(chance, "%", `${tr("chanceTitle")}: ${chance} %`),
       h(
         "div.hero__text",
         h("h1.subtitle", tr("chanceTitle")),
-        h("p", tr("chanceBody", { learned: stats.mastered, total: stats.total, cls: settings.cls })),
+        h("p", tr("chanceBody", { learned: stats.mastered, total: stats.total, cls })),
         h("p.muted.small", tr("rulesNote")),
       ),
     ),
     h(
       "ul.actions",
-      h(
-        "li",
-        h(
-          "a.action.action--primary",
-          { href: "#/practice" },
-          h("span.action__label", tr("practice")),
-          h("span.action__hint", tr("practiceHint")),
-        ),
-      ),
+      action("#/practice", tr("practice"), tr("practiceHint"), { primary: true }),
+      action("#/exam", tr("exam"), examRunning ? tr("examResume") : tr("examHint", { total: EXAM.questions })),
     ),
     settingsPanel(),
     footer(),
@@ -283,7 +435,7 @@ function settingsPanel() {
         type: "button",
         onclick: () => {
           if (!window.confirm(tr("resetConfirm", { cls: settings.cls }))) return;
-          for (const key of [progressKey, recentKey, currentKey]) remove(key(settings.cls));
+          for (const key of [progressKey, recentKey, currentKey, examKey, historyKey]) remove(key(settings.cls));
           route();
         },
       },
@@ -313,146 +465,296 @@ async function viewPractice() {
   }
 
   function showQuestion(q) {
-    const lang = settings.lang;
-    const text = localized(q, lang);
-    const translated = hasTranslation(q, lang);
     const order = optionOrder(q);
-    const multi = isMulti(q);
     const selected = new Set();
     let checked = false;
 
     const verdict = h("p.verdict", { role: "status" });
-    const button = h("button.btn", { type: "button", disabled: true }, multi ? tr("pickAll") : tr("pickOne"));
+    const button = h("button.btn", { type: "button", disabled: true });
+    const card = questionCard(q, { order, selected, onToggle: pick });
+    const learned = h("span", { title: tr("learnedHint") });
 
-    const optionButtons = order.map((orig, pos) => {
-      const btn = h(
-        "button.opt",
-        {
-          type: "button",
-          "aria-pressed": "false",
-          class: multi ? "opt opt--multi" : "opt",
-          onclick: () => toggle(orig),
-        },
-        h("span.opt__key", LETTERS[pos]),
-        h(
-          "span.opt__text",
-          text.answers[orig],
-          translated && h("span.original", { lang: "es" }, q.es.answers[orig]),
-        ),
-      );
-      btn.dataset.orig = orig;
-      return btn;
-    });
-
-    function refresh() {
-      for (const btn of optionButtons) btn.setAttribute("aria-pressed", String(selected.has(Number(btn.dataset.orig))));
-      button.disabled = selected.size === 0;
-      button.textContent = selected.size ? tr("check") : multi ? tr("pickAll") : tr("pickOne");
+    function updateButton() {
+      button.disabled = !checked && selected.size === 0;
+      button.textContent = checked ? tr("next") : selected.size ? tr("check") : card.multi ? tr("pickAll") : tr("pickOne");
     }
 
-    function toggle(orig) {
-      if (checked) return;
-      if (multi) selected.has(orig) ? selected.delete(orig) : selected.add(orig);
-      else {
-        selected.clear();
-        selected.add(orig);
-      }
-      refresh();
+    function updateLearned() {
+      learned.textContent = tr("learnedOf", { learned: summary(questions, records).mastered, total: questions.length });
+    }
+
+    function pick(orig) {
+      if (checked) return false;
+      toggleIn(selected, orig, card.multi);
+      card.refresh();
+      updateButton();
     }
 
     function check() {
       checked = true;
       const ok = isCorrect(q, [...selected]);
-      records = { ...records, [q.id]: grade(records[q.id], ok) };
+      records = recordAnswers(cls, [[q.id, ok]]);
       recent = [...recent, q.id].slice(-RECENT_WINDOW);
-      save(progressKey(cls), records);
       save(recentKey(cls), recent);
       remove(currentKey(cls));
       answeredInSession += 1;
-
-      for (const btn of optionButtons) {
-        const orig = Number(btn.dataset.orig);
-        btn.disabled = true;
-        btn.removeAttribute("aria-pressed");
-        if (q.correct.includes(orig)) btn.classList.add("opt--right");
-        else if (selected.has(orig)) btn.classList.add("opt--wrong");
-        else btn.classList.add("opt--dim");
-      }
+      card.reveal();
       verdict.textContent = ok ? tr("correct") : tr("wrong");
       verdict.className = `verdict ${ok ? "verdict--right" : "verdict--wrong"}`;
-      button.disabled = false;
-      button.textContent = tr("next");
-      learned.textContent = tr("learnedOf", { learned: summary(questions, records).mastered, total: questions.length });
+      updateButton();
+      updateLearned();
       button.focus();
     }
 
     button.addEventListener("click", () => (checked ? nextQuestion() : check()));
+    updateButton();
+    updateLearned();
 
-    const stats = summary(questions, records);
-    const learned = h("span", { title: tr("learnedHint") }, tr("learnedOf", { learned: stats.mastered, total: questions.length }));
-
-    const article = h(
+    render(
+      topBar(),
+      h(
         "article",
-        { class: settings.showOriginal ? "show-original" : null },
-        h("div.qhead", h("span.qhead__n", tr("questionN", { n: answeredInSession + 1 })), h("a", { href: "#/" }, tr("home"))),
-        lang === "en" && !translated && h("p.notice", tr("noTranslation")),
-        q.eliminatory && h("p.badge-elim", { title: tr("eliminatoryHint") }, tr("eliminatory")),
-        h(
-          "h1.qtext",
-          text.q,
-          translated && h("span.original", { lang: "es" }, q.es.q),
-        ),
-        translated &&
-          h(
-            "button.link-btn.toggle-original",
-            {
-              type: "button",
-              "aria-pressed": String(settings.showOriginal),
-              onclick: (e) => {
-                // Only toggles visibility, so an answered question keeps its state.
-                saveSettings({ showOriginal: !settings.showOriginal });
-                article.classList.toggle("show-original", settings.showOriginal);
-                e.currentTarget.setAttribute("aria-pressed", String(settings.showOriginal));
-                e.currentTarget.textContent = settings.showOriginal ? tr("hideOriginal") : tr("showOriginal");
-              },
-            },
-            settings.showOriginal ? tr("hideOriginal") : tr("showOriginal"),
-          ),
-        (q.img || []).map((src) => h("figure.qimg", h("img", { src, alt: "", loading: "eager" }))),
-        h("ul.options", optionButtons.map((btn) => h("li", btn))),
+        h("div.qhead", h("h1.qhead__n", tr("questionN", { n: answeredInSession + 1 })), h("a", { href: "#/" }, tr("home"))),
+        settings.lang === "en" && !hasTranslation(q, "en") && h("p.notice", tr("noTranslation")),
+        card.nodes,
         verdict,
         button,
-        h(
-          "footer.qfoot",
-          learned,
-          h(
-            "a",
-            { href: `${SOURCE_PDF}#page=${q.src.page}`, target: "_blank", rel: "noopener" },
-            tr("sourcePage", { page: q.src.page }),
-          ),
-        ),
-      );
-    render(topBar(), article);
-    keyHandler = (e) => {
-      if (e.target.closest("input, select, textarea") || e.metaKey || e.ctrlKey || e.altKey) return;
-      const pos = LETTERS.indexOf(e.key.toUpperCase());
-      const digit = Number(e.key) - 1;
-      const index = pos >= 0 ? pos : digit;
-      if (index >= 0 && index < order.length && !checked) {
-        e.preventDefault();
-        toggle(order[index]);
-      } else if (
-        e.key === "Enter" &&
-        !button.disabled &&
-        (document.activeElement === document.body || document.activeElement === null)
-      ) {
-        e.preventDefault();
-        button.click();
-      }
-    };
+        h("footer.qfoot", learned, sourceLink(q)),
+      ),
+    );
+    keyHandler = optionKeys(order, pick, button);
   }
 
   nextQuestion();
+}
+
+// ---------- mock exam ----------
+
+// Session: { ids, orders: {id: [option order]}, answers: {id: [selected]}, pos, started,
+// finished?, translate } in localStorage, so a reload resumes the exam where it was.
+async function viewExam() {
+  const loaded = await bankForView();
+  if (!loaded) return;
+  const { bank, cls } = loaded;
+  const byId = new Map(bank.questions.map((q) => [q.id, q]));
+  let session = load(examKey(cls), null);
+  // A bank update can remove questions or change options; such a session can't be scored.
+  if (session && !examSessionValid(session, byId)) {
+    remove(examKey(cls));
+    session = null;
+  }
+
+  if (!session) return examIntro();
+  if (session.finished) return examResult();
+  return examQuestion();
+
+  function persist() {
+    save(examKey(cls), session);
+  }
+
+  function examIntro() {
+    stopTimer();
+    keyHandler = null;
+    const history = load(historyKey(cls), []);
+    const canTranslate = settings.lang !== "es" && bank.questions.some((q) => hasTranslation(q, settings.lang));
+    render(
+      topBar(),
+      h(
+        "section.stack",
+        h("h1.title", tr("exam")),
+        h("p", tr("examRules", { total: EXAM.questions, elim: EXAM.eliminatory, needed: Math.ceil(EXAM.questions * EXAM.passRatio) })),
+        h("p.muted", tr("examNoLimit")),
+        canTranslate &&
+          segmented(
+            tr("examLanguage"),
+            [[false, tr("examSpanishOnly")], [true, tr("examWithTranslation")]],
+            settings.examTranslation,
+            (value) => (saveSettings({ examTranslation: value }), examIntro()),
+          ),
+        h(
+          "button.btn",
+          {
+            type: "button",
+            onclick: () => {
+              const ids = drawExam(bank.questions);
+              session = {
+                ids,
+                orders: Object.fromEntries(ids.map((id) => [id, optionOrder(byId.get(id))])),
+                answers: {},
+                pos: 0,
+                started: Date.now(),
+                elapsed: 0,
+                translate: canTranslate && settings.examTranslation,
+              };
+              persist();
+              examQuestion();
+            },
+          },
+          tr("examStart"),
+        ),
+        history.length > 0 && examHistory(history),
+      ),
+    );
+  }
+
+  function examHistory(history) {
+    const fmt = new Intl.DateTimeFormat(settings.lang, { dateStyle: "medium", timeStyle: "short" });
+    return h(
+      "section.history",
+      h("h2.subtitle", tr("examHistory")),
+      h(
+        "ol.history__list",
+        history.slice(0, 5).map((r) =>
+          h(
+            "li",
+            h("span", fmt.format(r.at)),
+            h("strong", `${r.correct}/${r.total}`),
+            h(r.passed ? "span.verdict--right" : "span.verdict--wrong", r.passed ? tr("passed") : tr("failed")),
+          ),
+        ),
+      ),
+    );
+  }
+
+  function examQuestion() {
+    const total = session.ids.length;
+    const id = session.ids[session.pos];
+    const q = byId.get(id);
+    const order = session.orders[id] || optionOrder(q);
+    const selected = new Set(session.answers[id] || []);
+    const card = questionCard(q, { order, selected, translate: session.translate, onToggle: pick });
+
+    function pick(orig) {
+      toggleIn(selected, orig, card.multi);
+      session.answers[id] = [...selected];
+      persist();
+      card.refresh();
+      updateNav();
+    }
+
+    function go(pos) {
+      session.pos = pos;
+      persist();
+      examQuestion();
+    }
+
+    function finish() {
+      const unanswered = session.ids.filter((x) => !(session.answers[x] || []).length).length;
+      if (unanswered && !window.confirm(tr("examFinishConfirm", { count: unanswered }))) return;
+      const questions = session.ids.map((x) => byId.get(x));
+      const score = scoreExam(questions, session.answers);
+      stopTimer();
+      session.finished = Date.now();
+      persist();
+      recordAnswers(cls, questions.map((x) => [x.id, !score.wrong.includes(x.id)]));
+      const history = [
+        { at: session.finished, correct: score.correct, total: score.total, passed: score.passed },
+        ...load(historyKey(cls), []),
+      ].slice(0, HISTORY_LIMIT);
+      save(historyKey(cls), history);
+      examResult();
+    }
+
+    const navCells = session.ids.map((x, i) =>
+      h(
+        "button.nav-cell",
+        {
+          type: "button",
+          "aria-label": tr("questionOf", { n: i + 1, total }),
+          "aria-current": i === session.pos ? "step" : null,
+          onclick: () => go(i),
+        },
+        String(i + 1),
+      ),
+    );
+
+    function updateNav() {
+      navCells.forEach((cell, i) => cell.classList.toggle("nav-cell--done", (session.answers[session.ids[i]] || []).length > 0));
+    }
+    updateNav();
+
+    // 6: count only time spent with the exam on screen, not wall-clock time since start.
+    session.elapsed = session.elapsed || 0;
+    const clock = h("span.clock", formatDuration(session.elapsed));
+    stopTimer();
+    timer = setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      session.elapsed += 1000;
+      persist();
+      clock.textContent = formatDuration(session.elapsed);
+    }, 1000);
+
+    const last = session.pos === total - 1;
+    const next = h(
+      "button.btn",
+      { type: "button", onclick: () => (last ? finish() : go(session.pos + 1)) },
+      last ? tr("examFinish") : tr("examNext"),
+    );
+
+    render(
+      topBar(),
+      h(
+        "article",
+        h("div.qhead", h("h1.qhead__n", tr("questionOf", { n: session.pos + 1, total })), clock),
+        card.nodes,
+        h(
+          "div.btn-row",
+          session.pos > 0 && h("button.btn.btn--quiet", { type: "button", onclick: () => go(session.pos - 1) }, tr("examPrev")),
+          next,
+        ),
+        h("nav.exam-nav", { "aria-label": tr("exam") }, navCells),
+        h(
+          "footer.qfoot",
+          !last && h("button.link-btn", { type: "button", onclick: finish }, tr("examFinish")),
+          sourceLink(q),
+        ),
+      ),
+    );
+    keyHandler = optionKeys(order, pick, next);
+  }
+
+  function examResult() {
+    stopTimer();
+    keyHandler = null;
+    const questions = session.ids.map((x) => byId.get(x));
+    const score = scoreExam(questions, session.answers);
+    const reasons = [];
+    if (score.correct < score.needed) reasons.push(tr("failScore", { needed: score.needed }));
+    if (score.elimWrong) reasons.push(tr("failElim", { count: score.elimWrong }));
+
+    render(
+      topBar(),
+      h(
+        "section.hero",
+        roundel(score.correct, `/${score.total}`, tr("scoreLabel", { correct: score.correct, total: score.total })),
+        h(
+          "div.hero__text",
+          h(score.passed ? "h1.subtitle.verdict--right" : "h1.subtitle.verdict--wrong", score.passed ? tr("passed") : tr("failed")),
+          reasons.map((r) => h("p", r)),
+          h("p.muted.small", tr("examTime", { time: formatDuration(session.elapsed || 0) })),
+        ),
+      ),
+      h(
+        "div.btn-row",
+        h("button.btn", { type: "button", onclick: () => (remove(examKey(cls)), viewExam()) }, tr("examAgain")),
+        h("a.btn.btn--quiet", { href: "#/" }, tr("home")),
+      ),
+      h(
+        "section.review-list",
+        h("h2.subtitle", score.wrong.length ? tr("examMistakes", { count: score.wrong.length }) : tr("examNoMistakes")),
+        score.wrong.map((id) => {
+          const q = byId.get(id);
+          const card = questionCard(q, {
+            order: session.orders[id] || optionOrder(q),
+            selected: new Set(session.answers[id] || []),
+            translate: Boolean(session.translate),
+          });
+          card.reveal();
+          return h("article.review-item", card.nodes, h("p.small", sourceLink(q)));
+        }),
+      ),
+    );
+  }
 }
 
 // ---------- router ----------
@@ -461,19 +763,20 @@ let keyHandler = null;
 document.addEventListener("keydown", (e) => keyHandler && keyHandler(e));
 
 const ROUTES = {
-  "": viewHome,
-  practice: viewPractice,
+  "": [viewHome, null],
+  practice: [viewPractice, "practice"],
+  exam: [viewExam, "exam"],
 };
 
 function route() {
   navId += 1;
   keyHandler = null;
+  stopTimer();
   applyTheme();
   if (!settings.lang) return viewLanguage();
   if (!settings.cls) return viewClass();
-  const name = location.hash.replace(/^#\/?/, "");
-  const view = ROUTES[name] || viewHome;
-  document.title = name === "practice" ? `${tr("practice")} — ${tr("appName")}` : tr("appName");
+  const [view, titleKey] = ROUTES[location.hash.replace(/^#\/?/, "")] || ROUTES[""];
+  document.title = titleKey ? `${tr(titleKey)} — ${tr("appName")}` : tr("appName");
   view();
 }
 

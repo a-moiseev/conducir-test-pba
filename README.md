@@ -88,13 +88,20 @@ backend. Progress is kept in the browser's `localStorage`.
 ```
 site/index.html
 site/css/style.css
-site/js/app.js              views and routing (#/, #/practice)
+site/js/app.js              views and routing (#/, #/practice, #/exam)
 site/js/lib/                pure logic, unit-tested with node --test
   progress.js               Leitner boxes and next-question selection
   readiness.js              chance of passing the real exam
   exam-rules.js             official exam format
+  exam.js                   draw and score a mock exam
   question.js, strings.js, storage.js, random.js
 ```
+
+Questions are shown in the selected language with the Spanish original always underneath,
+because the real exam is in Spanish. The mock exam is Spanish-only by default.
+
+The mock exam draws 5 eliminatory and 35 regular questions, shows results only at the end,
+and feeds its answers into practice progress. A running exam survives a page reload.
 
 Practice uses five Leitner boxes: a wrong answer sends a question back to box 1 (it returns
 after a few other questions), three right answers in a row make it "learned".

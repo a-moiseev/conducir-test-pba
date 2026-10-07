@@ -3,6 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test site/js/lib/lib.test.js"
+    "test": "node --test site/js/lib/lib.test.js site/js/lib/exam.test.js"
   }
 }
