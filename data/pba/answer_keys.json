@@ -1,0 +1,125 @@
+{
+  "note": "Answer keys for questions that the official PDF leaves unmarked. Each entry must match exactly one question (page + Spanish text) and name its options by their Spanish text. 'basis' is shown to users after they answer.",
+  "keys": [
+    {
+      "page": 54,
+      "q": "¿Cuál es la distancia aproximada recorrida circulando a 80km/h?:",
+      "correct": ["22 metros por segundo."],
+      "basis": {
+        "es": "Cálculo: 80 km/h ÷ 3,6 = 22,2 m/s.",
+        "en": "Arithmetic: 80 km/h ÷ 3.6 = 22.2 m/s.",
+        "ru": "Расчёт: 80 км/ч ÷ 3,6 = 22,2 м/с."
+      }
+    },
+    {
+      "page": 156,
+      "q": "Los dispositivos comprendidos en la Seguridad Pasiva reducen al minimo los daños que se pueden producir cuando acontece un siniestro.",
+      "correct": ["Verdadero."],
+      "basis": {
+        "es": "El mismo cuestionario define la seguridad pasiva como «reducir al mínimo los daños… cuando acontece un siniestro» (pág. 171); Manual del Conductor, pág. 124.",
+        "en": "The same bank defines passive safety as reducing damage when a crash happens (p. 171); Manual del Conductor, p. 124.",
+        "ru": "Тот же вопросник определяет пассивную безопасность как снижение ущерба при ДТП (с. 171); Manual del Conductor, с. 124."
+      }
+    },
+    {
+      "page": 156,
+      "q": "Los dispositivos comprendidos en la Seguridad Pasiva reducen al mínimo los daños que se pueden producir cuando acontece un siniestro.",
+      "correct": ["Verdadero"],
+      "basis": {
+        "es": "El mismo cuestionario define la seguridad pasiva como «reducir al mínimo los daños… cuando acontece un siniestro» (pág. 171); Manual del Conductor, pág. 124.",
+        "en": "The same bank defines passive safety as reducing damage when a crash happens (p. 171); Manual del Conductor, p. 124.",
+        "ru": "Тот же вопросник определяет пассивную безопасность как снижение ущерба при ДТП (с. 171); Manual del Conductor, с. 124."
+      }
+    },
+    {
+      "page": 156,
+      "q": "La Seguridad Preventiva es:",
+      "correct": ["El conjunto de soluciones tecnicas y de los elementos que hacen distendida la vida a bordo del automovil."],
+      "basis": {
+        "es": "Misma definición marcada como correcta en «La seguridad Preventiva consiste» (pág. 172).",
+        "en": "Same definition as the keyed answer to «La seguridad Preventiva consiste» (p. 172).",
+        "ru": "То же определение отмечено верным в вопросе «La seguridad Preventiva consiste» (с. 172)."
+      }
+    },
+    {
+      "page": 156,
+      "q": "Los cinturones de seguridad son un dispositivo perteneciente a la denominada seguridad pasiva",
+      "correct": ["Verdadero."],
+      "basis": {
+        "es": "El cuestionario marca los cinturones como seguridad pasiva (pág. 173); Manual del Conductor, pág. 124.",
+        "en": "The bank lists seat belts under passive safety (p. 173); Manual del Conductor, p. 124.",
+        "ru": "Вопросник относит ремни к пассивной безопасности (с. 173); Manual del Conductor, с. 124."
+      }
+    },
+    {
+      "page": 156,
+      "q": "El casco se incluye dentro de la denominada seguridad preventiva",
+      "correct": ["Falso."],
+      "basis": {
+        "es": "La misma pregunta está marcada «Falso» en la pág. 184; el Manual del Conductor clasifica el casco como seguridad pasiva (pág. 126).",
+        "en": "The same question is keyed «Falso» on p. 184; the manual classes the helmet as passive safety (p. 126).",
+        "ru": "Тот же вопрос на с. 184 отмечен «Falso»; Manual del Conductor относит шлем к пассивной безопасности (с. 126)."
+      }
+    },
+    {
+      "page": 157,
+      "q": "Las partes elementales de una motocicleta son:",
+      "correct": ["Cuadro", "Horquilla", "Frenos", "Pipa de direccion"],
+      "basis": {
+        "es": "Mismas respuestas marcadas en «Marque las partes elementales de una motocicleta» (pág. 184).",
+        "en": "Same options keyed in «Marque las partes elementales de una motocicleta» (p. 184).",
+        "ru": "Те же варианты отмечены в вопросе «Marque las partes elementales de una motocicleta» (с. 184)."
+      }
+    },
+    {
+      "page": 157,
+      "q": "Para circular en moto son aptos los casos de uso industrial.",
+      "correct": ["No, porque deber ser un casco que cumpla con las normas IRAM."],
+      "basis": {
+        "es": "La misma pregunta está marcada en la pág. 188.",
+        "en": "The same question is keyed on p. 188.",
+        "ru": "Тот же вопрос с ответом есть на с. 188."
+      }
+    },
+    {
+      "page": 157,
+      "q": "¿Los ciclomotores pueden llevar carga y/ o pasajero?",
+      "correct": ["Si, siempre y cuando la carga o pasajero no supere los 40 kg."],
+      "basis": {
+        "es": "La misma pregunta está marcada en la pág. 189; Decreto 532/09, anexo III, art. 14 (art. 40 de la Ley 24.449).",
+        "en": "The same question is keyed on p. 189; Decreto 532/09, annex III, art. 14 (Ley 24.449, art. 40).",
+        "ru": "Тот же вопрос с ответом есть на с. 189; Decreto 532/09, приложение III, ст. 14 (ст. 40 закона 24.449)."
+      }
+    },
+    {
+      "page": 157,
+      "q": "Cuales de los siguientes elementos comprenden la Seguridad Pasiva de un vehiculo automotor:",
+      "correct": ["Apoya cabezas", "Cinturon de Seguridad", "Chasis y carroceria"],
+      "basis": {
+        "es": "Manual del Conductor, págs. 124-126: cinturones, apoyacabezas y la deformación programada del chasis y la carrocería son seguridad pasiva; la suspensión, como los frenos, es seguridad activa.",
+        "en": "Manual del Conductor, pp. 124-126: belts, headrests and the crumple zones of chassis and body are passive safety; suspension, like brakes, is active safety.",
+        "ru": "Manual del Conductor, с. 124–126: ремни, подголовники и деформируемые шасси и кузов — пассивная безопасность; подвеска, как и тормоза, — активная."
+      }
+    },
+    {
+      "page": 175,
+      "q": "Uno de los dispositivos de seguridad que como minimo deben tener los automoviles es:",
+      "correct": ["Paragolpes y guardabarros."],
+      "basis": {
+        "es": "Ley 24.449, art. 30, inc. b: «Paragolpes y guardabarros o carrocería que cumpla tales funciones».",
+        "en": "Ley 24.449, art. 30(b): bumpers and fenders, or bodywork serving that purpose.",
+        "ru": "Закон 24.449, ст. 30, п. b: бамперы и крылья или кузов, выполняющий их функцию."
+      }
+    },
+    {
+      "page": 192,
+      "q": "Está permitido estacionar moto vehículos sobre la vereda?",
+      "correct": ["No, no está permitido."],
+      "basis": {
+        "es": "La misma pregunta está marcada «No» en la pág. 187.",
+        "en": "The same question is keyed «No» on p. 187.",
+        "ru": "Тот же вопрос на с. 187 отмечен ответом «No»."
+      }
+    }
+  ]
+}

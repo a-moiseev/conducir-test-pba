@@ -6,6 +6,7 @@ export const LANG_NAMES = { es: "Español", en: "English", ru: "Русский" 
 
 const STRINGS = {
   es: {
+    keyRestored: "Esta respuesta no está marcada en el cuestionario oficial; la completamos nosotros.",
     glossaryIntro: "Términos que aparecen en las preguntas del examen, con su traducción al inglés.",
     glossarySearch: "Buscar un término",
     glossaryNoMatch: "Ningún término coincide con la búsqueda.",
@@ -86,6 +87,7 @@ const STRINGS = {
     back: "Volver al inicio",
   },
   en: {
+    keyRestored: "The official question bank leaves this answer unmarked; we filled it in.",
     glossaryIntro: "Terms that come up in the exam questions, with their English meaning.",
     glossarySearch: "Search for a term",
     glossaryNoMatch: "No term matches your search.",
@@ -166,6 +168,7 @@ const STRINGS = {
     back: "Back to home",
   },
   ru: {
+    keyRestored: "В официальном вопроснике ответ не отмечен, мы восстановили его.",
     glossaryIntro: "Термины, которые встречаются в вопросах экзамена, с переводом на русский.",
     glossarySearch: "Найти термин",
     glossaryNoMatch: "Такого термина нет.",

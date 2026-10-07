@@ -22,8 +22,11 @@ The PDF has a real text layer, so the bank is parsed automatically:
   class-specific sections (cars, motorcycles, trucks, taxis, …).
 
 Known gaps in the source: some questions have no answer key (most of them in the heavy-vehicle
-sections), and some answers predate later law changes (e.g. *Alcohol Cero*). These are reported
-by the parser and must not be "fixed" by guessing.
+sections), and some answers predate later law changes (e.g. *Alcohol Cero*). The parser reports
+unkeyed questions instead of guessing. For the car and motorcycle classes the missing keys are
+filled in by hand in `data/pba/answer_keys.json`, each with its basis: a keyed twin of the same
+question elsewhere in the bank, the official *Manual del Conductor*, Ley 24.449, or plain
+arithmetic. The site tells users when an answer key comes from there.
 
 ## Repository layout
 
@@ -34,6 +37,7 @@ data/pba/questions.json       parsed bank (Spanish), one record per question
 data/pba/images/              question images cropped from the PDF
 data/pba/i18n/ru.json         Russian translations, keyed by a hash of the Spanish text
 data/pba/glossary.json        road terms (es / en / ru): translation reference and glossary page
+data/pba/answer_keys.json     answer keys the PDF leaves unmarked, with sources
 ```
 
 ### Question record

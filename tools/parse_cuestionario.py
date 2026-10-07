@@ -226,11 +226,13 @@ class Parser:
         if TF_RE.match(text):
             if self.cur is None:
                 return
+            # Some V/F lines have neither letter in green: no answer key, not "Falso".
             v_green = any(s["color"] == GREEN and "V" in s["text"] for s in item["spans"])
+            f_green = any(s["color"] == GREEN and "F" in s["text"] for s in item["spans"])
             self.cur["type"] = "tf"
             self.cur["answers"] = [
                 {"parts": ["Verdadero."], "correct": v_green},
-                {"parts": ["Falso."], "correct": not v_green},
+                {"parts": ["Falso."], "correct": f_green},
             ]
             self.last = item
             return

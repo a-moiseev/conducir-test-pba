@@ -86,6 +86,30 @@ def localize(q, store):
     return {"q": q_t, "answers": answers_t}
 
 
+def apply_answer_keys(questions, entries):
+    """Fill in keys the PDF leaves unmarked (data/pba/answer_keys.json).
+
+    Every entry must match exactly one question that has no key of its own, and name
+    existing options; anything else stops the build.
+    """
+    for entry in entries:
+        matches = [q for q in questions if q["page"] == entry["page"] and q["es"]["q"] == entry["q"]]
+        if len(matches) != 1:
+            raise SystemExit(f"answer key matches {len(matches)} questions: p{entry['page']} {entry['q'][:60]!r}")
+        q = matches[0]
+        if q["correct"]:
+            raise SystemExit(f"answer key for an already keyed question: {entry['q'][:60]!r}")
+        answers = q["es"]["answers"]
+        missing = [a for a in entry["correct"] if a not in answers]
+        if missing:
+            raise SystemExit(f"answer key names unknown options {missing} in {entry['q'][:60]!r}")
+        q["correct"] = sorted(answers.index(a) for a in entry["correct"])
+        if len(q["correct"]) > 1:
+            q["type"] = "multi"
+        q["key_basis"] = entry["basis"]
+    return len(entries)
+
+
 def build_category(questions, ids, stores, spec):
     """Returns (items, dropped, warnings) for one license category."""
     out, dropped, warnings = [], Counter(), []
@@ -119,6 +143,8 @@ def build_category(questions, ids, stores, spec):
             item["fixedOrder"] = True
         if q.get("images"):
             item["img"] = [f"img/{name}" for name in q["images"]]
+        if q.get("key_basis"):
+            item["keyBasis"] = q["key_basis"]  # key restored by us, not marked in the PDF
         for lang, store in stores.items():
             loc = localize(q, store)
             if loc:
@@ -147,7 +173,11 @@ def main():
     def image_hash(name):
         return hashlib.sha1((data / "images" / name).read_bytes()).hexdigest()
 
-    ids = stable_ids(questions, image_hash)
+    ids = stable_ids(questions, image_hash)  # before keys are added: ids depend on text only
+    keys_file = data / "answer_keys.json"
+    if keys_file.exists():
+        count = apply_answer_keys(questions, json.loads(keys_file.read_text(encoding="utf-8"))["keys"])
+        print(f"answer keys added by hand: {count}")
 
     data_tmp, img_tmp = site / "data.tmp", site / "img.tmp"
     for tmp in (data_tmp, img_tmp):

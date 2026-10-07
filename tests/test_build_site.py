@@ -125,3 +125,33 @@ class BuildCategoryTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AnswerKeysTest(unittest.TestCase):
+    basis = {"es": "b", "en": "b", "ru": "b"}
+
+    def entry(self, text, correct, page=1):
+        return {"page": page, "q": text, "correct": correct, "basis": self.basis}
+
+    def test_fills_key_by_option_text(self):
+        qs = [q("¿Cuánto?", ["10", "22", "30"], correct=())]
+        build_site.apply_answer_keys(qs, [self.entry("¿Cuánto?", ["22"])])
+        self.assertEqual(qs[0]["correct"], [1])
+        self.assertEqual(qs[0]["key_basis"], self.basis)
+
+    def test_several_options_make_it_multi(self):
+        qs = [q("Partes", ["a", "b", "c"], correct=())]
+        build_site.apply_answer_keys(qs, [self.entry("Partes", ["c", "a"])])
+        self.assertEqual(qs[0]["correct"], [0, 2])
+        self.assertEqual(qs[0]["type"], "multi")
+
+    def test_rejects_bad_entries(self):
+        unkeyed = [q("X", ["a", "b"], correct=())]
+        with self.assertRaises(SystemExit):  # no such question
+            build_site.apply_answer_keys(unkeyed, [self.entry("Y", ["a"])])
+        with self.assertRaises(SystemExit):  # wrong page
+            build_site.apply_answer_keys(unkeyed, [self.entry("X", ["a"], page=2)])
+        with self.assertRaises(SystemExit):  # unknown option
+            build_site.apply_answer_keys(unkeyed, [self.entry("X", ["z"])])
+        with self.assertRaises(SystemExit):  # the PDF already has a key
+            build_site.apply_answer_keys([q("X", ["a", "b"])], [self.entry("X", ["b"])])

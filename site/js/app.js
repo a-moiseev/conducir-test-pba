@@ -230,6 +230,11 @@ function questionCard(q, { order, selected, translate = true, onToggle }) {
     return btn;
   });
 
+  // Keys we restored ourselves (the PDF leaves them unmarked) say so once revealed.
+  const basis =
+    q.keyBasis &&
+    h("p.key-basis", { hidden: true }, h("strong", tr("keyRestored")), " ", q.keyBasis[settings.lang] || q.keyBasis.en);
+
   const nodes = [
     q.eliminatory && h("p.badge-elim", { title: tr("eliminatoryHint") }, tr("eliminatory")),
     h(
@@ -240,6 +245,7 @@ function questionCard(q, { order, selected, translate = true, onToggle }) {
     (q.img || []).map((src) => h("figure.qimg", h("img", { src, alt: "", loading: "eager" }))),
     multi && h("p.multi-hint", tr("pickAll")),
     h("ul.options", { "aria-label": multi ? tr("pickAll") : tr("pickOne") }, optionButtons.map((b) => h("li", b))),
+    basis,
   ];
 
   return {
@@ -258,6 +264,7 @@ function questionCard(q, { order, selected, translate = true, onToggle }) {
         else if (selected.has(orig)) btn.classList.add("opt--wrong");
         else btn.classList.add("opt--dim");
       }
+      if (basis) basis.hidden = false;
     },
   };
 }
