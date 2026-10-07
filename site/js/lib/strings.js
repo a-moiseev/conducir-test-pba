@@ -79,7 +79,6 @@ const STRINGS = {
     disclaimer:
       "Herramienta no oficial. Las preguntas y respuestas salen del cuestionario publicado por la Dirección Provincial de Política y Seguridad Vial; el examen real puede variar.",
     sourceLink: "Cuestionario oficial (PDF)",
-    codeLink: "GitHub",
     back: "Volver al inicio",
   },
   en: {
@@ -156,7 +155,6 @@ const STRINGS = {
     disclaimer:
       "Unofficial tool. Questions and answers come from the bank published by the provincial road safety office; the real exam may differ.",
     sourceLink: "Official question bank (PDF)",
-    codeLink: "GitHub",
     back: "Back to home",
   },
   ru: {
@@ -233,7 +231,6 @@ const STRINGS = {
     disclaimer:
       "Неофициальный тренажёр. Вопросы и ответы взяты из вопросника, опубликованного дорожной службой провинции; на настоящем экзамене они могут отличаться.",
     sourceLink: "Официальный вопросник (PDF)",
-    codeLink: "GitHub",
     back: "На главную",
   },
 };

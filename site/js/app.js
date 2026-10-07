@@ -9,7 +9,6 @@ import { EXAM } from "./lib/exam-rules.js";
 
 const CLASSES = ["A", "B"];
 const SOURCE_PDF = "https://www.gba.gob.ar/static/seguridadvial/docs/cuestionario.pdf";
-const REPO_URL = "https://github.com/a-moiseev/conducir-test-pba";
 const LETTERS = "ABCDEFGH";
 const HISTORY_LIMIT = 20;
 
@@ -184,7 +183,6 @@ function footer() {
     h(
       "p.footer__links",
       h("a", { href: SOURCE_PDF, target: "_blank", rel: "noopener" }, tr("sourceLink")),
-      h("a", { href: REPO_URL, target: "_blank", rel: "noopener" }, tr("codeLink")),
     ),
   );
 }
