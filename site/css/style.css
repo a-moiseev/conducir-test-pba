@@ -205,9 +205,11 @@ a {
   cursor: pointer;
 }
 
-.icon-btn:hover,
-.plate:hover {
-  background: var(--concrete);
+@media (hover: hover) {
+  .icon-btn:hover,
+  .plate:hover {
+    background: var(--concrete);
+  }
 }
 
 .icon-btn svg {
@@ -319,8 +321,10 @@ a {
   text-decoration: none;
 }
 
-.action:hover {
-  border-color: var(--ink);
+@media (hover: hover) {
+  .action:hover {
+    border-color: var(--ink);
+  }
 }
 
 .action__label {
@@ -354,8 +358,10 @@ a {
   opacity: 0.85;
 }
 
-.action--primary:hover {
-  border-color: var(--ink);
+@media (hover: hover) {
+  .action--primary:hover {
+    border-color: var(--ink);
+  }
 }
 
 .action--warning {
@@ -383,8 +389,10 @@ a {
   cursor: pointer;
 }
 
-.choice:hover {
-  border-color: var(--ink);
+@media (hover: hover) {
+  .choice:hover {
+    border-color: var(--ink);
+  }
 }
 
 .choice strong {
@@ -559,8 +567,10 @@ a {
   cursor: pointer;
 }
 
-.opt:hover:not(:disabled) {
-  border-color: var(--ink);
+@media (hover: hover) {
+  .opt:hover:not(:disabled) {
+    border-color: var(--ink);
+  }
 }
 
 .opt:disabled {
