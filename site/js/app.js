@@ -2,7 +2,7 @@
 import { load, save, remove } from "./lib/storage.js";
 import { t, UI_LANGS, LANG_NAMES } from "./lib/strings.js";
 import { optionOrder, isCorrect, isMulti, localized, hasTranslation } from "./lib/question.js";
-import { grade, pickNext, summary, RECENT_WINDOW } from "./lib/progress.js";
+import { answerCount, grade, pickNext, summary, RECENT_WINDOW } from "./lib/progress.js";
 import { readiness } from "./lib/readiness.js";
 import { drawExam, scoreExam } from "./lib/exam.js";
 import { EXAM } from "./lib/exam-rules.js";
@@ -50,7 +50,8 @@ const historyKey = (cls) => `examHistory:${cls}`;
 function recordAnswers(cls, results) {
   const records = { ...load(progressKey(cls), {}) };
   const now = Date.now();
-  for (const [id, ok] of results) records[id] = grade(records[id], ok, now);
+  const step = answerCount(records);
+  for (const [id, ok] of results) records[id] = grade(records[id], ok, now, step);
   save(progressKey(cls), records);
   return records;
 }

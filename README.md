@@ -100,7 +100,7 @@ site/index.html
 site/css/style.css
 site/js/app.js              views and routing (#/, #/practice, #/exam, #/review, #/glossary)
 site/js/lib/                pure logic, unit-tested with node --test
-  progress.js               Leitner boxes and next-question selection
+  progress.js               learning state and next-question selection
   readiness.js              chance of passing the real exam
   exam-rules.js             official exam format
   exam.js                   draw and score a mock exam
@@ -121,8 +121,11 @@ section, with their translation into the interface language; search ignores acce
 review open it in a dialog over the question, so looking up a word keeps the question's state.
 The mock exam has no glossary (neither does the real one), and the Spanish interface has none at all.
 
-Practice uses five Leitner boxes: a wrong answer sends a question back to box 1 (it returns
-after a few other questions), three right answers in a row make it "learned".
+A question counts as learned after two right answers (not necessarily in a row) as long as
+the latest one was right. Each question waits a minimum number of other answers before it can
+come back: 10 after a wrong answer, 30 after a right one, 150 once learned. Questions whose wait
+is over take part of the picks (about 40 %); the rest are new questions and, now and then, a
+learned one.
 
 The pass estimate follows the official rules (Manual del Conductor, Disposición 46/2019:
 40 questions, 5 of them eliminatory, at least 75 % correct and every eliminatory question right):

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 
 import { shuffle, weightedPick, seeded } from "./random.js";
 import { optionOrder, isCorrect, isMulti, localized } from "./question.js";
-import { grade, emptyRecord, isMastered, pickNext, summary, MASTERED_BOX } from "./progress.js";
+import { grade, emptyRecord, isMastered, pickNext, summary, MASTERED_BOX, MIN_GAP } from "./progress.js";
 import { t, UI_LANGS, _STRINGS_FOR_TESTS } from "./strings.js";
 
 const q = (id, extra = {}) => ({
@@ -49,19 +49,52 @@ test("localized falls back to Spanish", () => {
   assert.equal(localized(question, "es").q, "q1");
 });
 
-test("three right answers in a row master a new question; a miss resets it", () => {
+test("two right answers, not necessarily in a row, learn a question; a miss unlearns it", () => {
   let r = emptyRecord();
-  r = grade(r, true, 1);
-  r = grade(r, true, 2);
+  r = grade(r, true, 1, 0);
   assert.ok(!isMastered(r));
-  r = grade(r, true, 3);
-  assert.ok(isMastered(r));
-  assert.equal(r.box, MASTERED_BOX);
-  r = grade(r, false, 4);
+  r = grade(r, false, 2, 10);
   assert.equal(r.box, 1);
   assert.ok(r.miss);
-  assert.equal(r.seen, 4);
+  r = grade(r, true, 3, 20);
+  assert.ok(isMastered(r));
+  assert.equal(r.box, MASTERED_BOX);
+  assert.equal(r.step, 20);
+  r = grade(r, false, 4, 30);
+  assert.ok(!isMastered(r));
+  r = grade(r, true, 5, 40);
+  assert.ok(isMastered(r));
+  assert.equal(r.seen, 5);
   assert.equal(r.right, 3);
+});
+
+test("records from the three-answer rule keep their learned state", () => {
+  assert.ok(isMastered({ box: 4 }));
+  assert.ok(isMastered({ box: 3 }));
+  assert.ok(!isMastered({ box: 2 }));
+  assert.ok(isMastered({ box: 2, right: 2 }));
+  assert.ok(!isMastered({ box: 1, right: 5, miss: true }));
+});
+
+test("pickNext waits out each question's gap", () => {
+  const qs = Array.from({ length: 40 }, (_, i) => q(`q${i}`));
+  // q0 was answered wrong 3 answers ago: new questions come first.
+  const records = { q0: { box: 1, seen: 1, right: 0, miss: true, step: 0 }, x: { seen: 3 } };
+  for (let i = 0; i < 200; i++) assert.notEqual(pickNext(qs, records, [], seeded(i)).id, "q0");
+  // Once its gap has passed it comes back often.
+  records.x.seen = MIN_GAP[1] + 1;
+  const hits = Array.from({ length: 200 }, (_, i) => pickNext(qs, records, [], seeded(i)).id === "q0");
+  assert.ok(hits.filter(Boolean).length > 50);
+});
+
+test("when every question waits, the most overdue one comes", () => {
+  const qs = [q("a"), q("b"), q("c")];
+  const records = {
+    a: { box: 2, seen: 1, right: 1, step: 9 },
+    b: { box: 1, seen: 1, miss: true, step: 8 },
+    c: { box: 2, seen: 1, right: 1, step: 7 },
+  };
+  assert.equal(pickNext(qs, records, ["b"], seeded(1)).id, "c");
 });
 
 test("pickNext avoids recently shown questions and prefers weak ones", () => {

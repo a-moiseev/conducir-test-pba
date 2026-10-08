@@ -9,7 +9,7 @@ import { EXAM } from "./exam-rules.js";
 import { boxOf } from "./progress.js";
 
 // Chance of a correct answer by Leitner box; box 0 (never answered) is a blind guess.
-const BOX_P = { 1: 0.35, 2: 0.6, 3: 0.8, 4: 0.95 };
+const BOX_P = { 1: 0.35, 2: 0.65, 3: 0.95 };
 
 export function questionP(question, record) {
   const box = boxOf(record);
