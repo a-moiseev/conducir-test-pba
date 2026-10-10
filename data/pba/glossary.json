@@ -41,7 +41,7 @@
         {"es": "señales preventivas", "en": "warning signs", "ru": "предупреждающие знаки"},
         {"es": "señales informativas", "en": "information signs", "ru": "информационные знаки"},
         {"es": "señales transitorias", "en": "temporary (roadwork) signs", "ru": "временные знаки"},
-        {"es": "orla roja", "en": "red border", "ru": "красная кайма"},
+        {"es": "orla roja", "en": "red border (around a sign)", "ru": "красная окантовка знака"},
         {"es": "semáforo", "en": "traffic light", "ru": "светофор"},
         {"es": "luz intermitente", "en": "flashing light", "ru": "мигающий сигнал"},
         {"es": "agente de tránsito", "en": "traffic officer", "ru": "инспектор дорожного движения"},
