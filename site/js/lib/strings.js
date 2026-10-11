@@ -1,7 +1,8 @@
 // UI strings. The UI language also picks the question language; when the bank is not yet
-// translated into it (English for now), questions fall back to the Spanish original.
+// translated into it, questions fall back to the Spanish original.
 
-export const UI_LANGS = ["es", "en", "ru"];
+// English is not offered until the question bank is translated; its strings stay ready.
+export const UI_LANGS = ["es", "ru"];
 export const LANG_NAMES = { es: "Español", en: "English", ru: "Русский" };
 
 const STRINGS = {

@@ -118,9 +118,9 @@ test("summary counts", () => {
   assert.deepEqual(s, { total: 3, seen: 2, mastered: 1, mistakes: 1 });
 });
 
-test("every UI language defines every string", () => {
-  const keys = Object.keys(_STRINGS_FOR_TESTS.en);
-  for (const lang of UI_LANGS) {
+test("every language defines every string, offered or not", () => {
+  const keys = Object.keys(_STRINGS_FOR_TESTS.es);
+  for (const lang of new Set([...UI_LANGS, ...Object.keys(_STRINGS_FOR_TESTS)])) {
     assert.deepEqual(Object.keys(_STRINGS_FOR_TESTS[lang]).sort(), [...keys].sort(), lang);
   }
   assert.equal(t("ru", "learnedOf", { learned: 2, total: 5 }), "Выучено: 2 из 5");

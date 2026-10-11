@@ -120,8 +120,9 @@ site/js/lib/                pure logic, unit-tested with node --test
   question.js, strings.js, storage.js, random.js
 ```
 
-The interface is in Spanish unless the visitor picks English or Russian (on the class screen
-or on the home page).
+The interface is in Spanish unless the visitor picks Russian (on the class screen
+or on the home page). English strings exist but English is not offered until the question
+bank is translated.
 Questions are shown in the selected language with the Spanish original always underneath,
 because the real exam is in Spanish. The mock exam is in Spanish only, like the real one.
 
