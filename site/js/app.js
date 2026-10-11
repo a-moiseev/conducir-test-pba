@@ -9,6 +9,7 @@ import { EXAM } from "./lib/exam-rules.js";
 
 const CLASSES = ["A", "B"];
 const SOURCE_PDF = "https://www.gba.gob.ar/static/seguridadvial/docs/cuestionario.pdf";
+const CONTACT_EMAIL = "hola@conducir.ar";
 const LETTERS = "ABCDEFGH";
 const HISTORY_LIMIT = 20;
 
@@ -18,7 +19,7 @@ const app = document.getElementById("app");
 
 const settings = { lang: null, cls: null, theme: null, ...load("settings", {}) };
 delete settings.examTranslation; // the mock exam is always in Spanish now
-if (!UI_LANGS.includes(settings.lang)) settings.lang = null;
+if (!UI_LANGS.includes(settings.lang)) settings.lang = "es"; // the site is for Argentina: Spanish unless chosen otherwise
 if (!CLASSES.includes(settings.cls)) settings.cls = null;
 
 function saveSettings(patch) {
@@ -183,6 +184,7 @@ function footer() {
     h("p", tr("disclaimer")),
     h(
       "p.footer__links",
+      h("a", { href: "#/about" }, tr("about")),
       h("a", { href: SOURCE_PDF, target: "_blank", rel: "noopener" }, tr("sourceLink")),
     ),
   );
@@ -309,33 +311,13 @@ function optionKeys(order, onPick, button) {
 
 // ---------- onboarding ----------
 
-function viewLanguage() {
-  // Shown before a language is known, so the prompt is given in every language.
-  render(
-    h("header.bar", h("span.bar__home", t("es", "appName"))),
-    h(
-      "section",
-      h("h1.title", UI_LANGS.map((l) => h("span.title__line", { lang: l }, t(l, "languagePrompt")))),
-      h(
-        "div.choices",
-        UI_LANGS.map((lang) =>
-          h(
-            "button.choice",
-            { type: "button", lang, onclick: () => (saveSettings({ lang }), applyTheme(), route()) },
-            h("strong", LANG_NAMES[lang]),
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
 function viewClass() {
   render(
     topBar(),
     h(
       "section",
       h("h1.title", tr("classPrompt")),
+      h("div.onboard-lang", languagePicker()),
       h(
         "div.choices",
         CLASSES.map((cls) =>
@@ -348,6 +330,7 @@ function viewClass() {
         ),
       ),
     ),
+    footer(),
   );
 }
 
@@ -426,15 +409,19 @@ async function viewHome() {
   );
 }
 
+function languagePicker() {
+  return segmented(tr("language"), UI_LANGS.map((l) => [l, LANG_NAMES[l]]), settings.lang, (lang) => {
+    saveSettings({ lang });
+    applyTheme();
+    route();
+  });
+}
+
 function settingsPanel() {
   return h(
     "section.settings",
     { "aria-label": tr("settings") },
-    segmented(tr("language"), UI_LANGS.map((l) => [l, LANG_NAMES[l]]), settings.lang, (lang) => {
-      saveSettings({ lang });
-      applyTheme();
-      route();
-    }),
+    languagePicker(),
     h(
       "button.link-btn",
       {
@@ -892,6 +879,26 @@ async function openGlossaryDialog() {
   }
 }
 
+// ---------- about ----------
+
+function viewAbout() {
+  const rules = { total: EXAM.questions, elim: EXAM.eliminatory, ratio: Math.round(EXAM.passRatio * 100) };
+  render(
+    topBar(),
+    h(
+      "article.stack.about",
+      h("h1.title", tr("about")),
+      h("p", tr("aboutIntro")),
+      h("p", tr("aboutSource", rules), " ", h("a", { href: SOURCE_PDF, target: "_blank", rel: "noopener" }, tr("sourceLink")), "."),
+      h("p", tr("aboutUnofficial")),
+      h("p", tr("aboutPrivacy")),
+      h("h2.subtitle", tr("aboutContactTitle")),
+      h("p", tr("aboutContact"), " ", h("a", { href: `mailto:${CONTACT_EMAIL}` }, CONTACT_EMAIL)),
+      h("p", h("a", { href: "#/" }, tr("back"))),
+    ),
+  );
+}
+
 // ---------- router ----------
 
 let keyHandler = null;
@@ -906,16 +913,20 @@ const ROUTES = {
   exam: [viewExam, "exam"],
   review: [() => viewPractice("review"), "review"],
   glossary: [viewGlossary, "glossary"],
+  about: [viewAbout, "about"],
 };
+
+// Pages that make sense before a license class is chosen.
+const OPEN_ROUTES = new Set(["about"]);
 
 function route() {
   navId += 1;
   keyHandler = null;
   stopTimer();
   applyTheme();
-  if (!settings.lang) return viewLanguage();
-  if (!settings.cls) return viewClass();
-  const [view, titleKey] = ROUTES[location.hash.replace(/^#\/?/, "")] || ROUTES[""];
+  const path = location.hash.replace(/^#\/?/, "");
+  const choosingClass = !settings.cls && !OPEN_ROUTES.has(path);
+  const [view, titleKey] = choosingClass ? [viewClass, null] : ROUTES[path] || ROUTES[""];
   document.title = titleKey ? `${tr(titleKey)} — ${tr("appName")}` : tr("appName");
   view();
 }

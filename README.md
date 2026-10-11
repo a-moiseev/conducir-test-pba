@@ -98,7 +98,7 @@ backend. Progress is kept in the browser's `localStorage`.
 ```
 site/index.html
 site/css/style.css
-site/js/app.js              views and routing (#/, #/practice, #/exam, #/review, #/glossary)
+site/js/app.js              views and routing (#/, #/practice, #/exam, #/review, #/glossary, #/about)
 site/js/lib/                pure logic, unit-tested with node --test
   progress.js               learning state and next-question selection
   readiness.js              chance of passing the real exam
@@ -107,6 +107,8 @@ site/js/lib/                pure logic, unit-tested with node --test
   question.js, strings.js, storage.js, random.js
 ```
 
+The interface is in Spanish unless the visitor picks English or Russian (on the class screen
+or on the home page).
 Questions are shown in the selected language with the Spanish original always underneath,
 because the real exam is in Spanish. The mock exam is in Spanish only, like the real one.
 

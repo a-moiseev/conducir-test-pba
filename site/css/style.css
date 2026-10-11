@@ -226,14 +226,6 @@ a {
   letter-spacing: -0.02em;
 }
 
-.title__line {
-  display: block;
-}
-
-.title__line + .title__line {
-  color: var(--muted);
-}
-
 .subtitle {
   font-size: var(--t-md);
   font-weight: 700;
@@ -462,6 +454,18 @@ a {
 
 .footer p + p {
   margin-top: 0.5rem;
+}
+
+.onboard-lang {
+  margin: 1rem 0 1.5rem;
+}
+
+.about {
+  max-width: 40rem;
+}
+
+.about .subtitle {
+  margin-top: 2rem;
 }
 
 /* ---------- Question ---------- */
