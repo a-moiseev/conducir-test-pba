@@ -1,9 +1,10 @@
 """Build per-category question files for the static site.
 
 Reads data/pba/questions.json, data/pba/i18n/<lang>.json and data/pba/glossary.json,
-writes site/data/<category>.json and site/data/glossary.json, and copies the images the
-questions use to site/img/.
-Both directories are built aside and swapped in only when everything succeeded.
+writes site/data/<category>.json and site/data/glossary.json, copies the images the
+questions use to site/img/, and writes the static pages for search engines
+(site/preguntas/, site/sitemap.xml; see build_pages.py).
+Everything is built aside and swapped in only when everything succeeded.
 
 Usage: .venv/bin/python tools/build_site.py [data_dir] [site_dir]
 """
@@ -17,6 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from i18n import key as translation_key  # noqa: E402  (same key as the translation store)
+from build_pages import build_pages  # noqa: E402
 
 LANGS = ["ru"]
 SOURCE_URL = "https://www.gba.gob.ar/static/seguridadvial/docs/cuestionario.pdf"
@@ -177,14 +179,16 @@ def main():
         count = apply_answer_keys(questions, json.loads(keys_file.read_text(encoding="utf-8"))["keys"])
         print(f"answer keys added by hand: {count}")
 
-    data_tmp, img_tmp = site / "data.tmp", site / "img.tmp"
-    for tmp in (data_tmp, img_tmp):
+    data_tmp, img_tmp, pages_tmp = site / "data.tmp", site / "img.tmp", site / "pages.tmp"
+    for tmp in (data_tmp, img_tmp, pages_tmp):
         shutil.rmtree(tmp, ignore_errors=True)
         tmp.mkdir(parents=True)
 
     used_images = set()
+    built = {}
     for cat, spec in CATEGORIES.items():
         items, dropped, warnings = build_category(questions, ids, stores, spec)
+        built[cat] = items
         payload = {"category": cat.upper(), "source": SOURCE_URL, "questions": items}
         (data_tmp / f"{cat}.json").write_text(
             json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
@@ -203,9 +207,14 @@ def main():
 
     for name in sorted(used_images):
         shutil.copy2(data / "images" / name, img_tmp / name)
+    topics = build_pages(built, pages_tmp)
+
     swap_in(data_tmp, site / "data")
     swap_in(img_tmp, site / "img")
-    print(f"images: {len(used_images)}")
+    swap_in(pages_tmp / "preguntas", site / "preguntas")
+    (pages_tmp / "sitemap.xml").replace(site / "sitemap.xml")
+    pages_tmp.rmdir()
+    print(f"images: {len(used_images)}, topic pages: {topics}")
 
 
 if __name__ == "__main__":

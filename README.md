@@ -33,6 +33,8 @@ arithmetic.
 ```
 tools/parse_cuestionario.py   PDF -> data/pba/questions.json + data/pba/images/
 tools/i18n.py                 translation store: pending / apply / check
+tools/build_site.py           data/pba -> site/data, site/img (+ build_pages.py)
+tools/build_pages.py          static topic pages and sitemap for search engines
 data/pba/questions.json       parsed bank (Spanish), one record per question
 data/pba/images/              question images cropped from the PDF
 data/pba/i18n/ru.json         Russian translations, keyed by a hash of the Spanish text
@@ -88,7 +90,13 @@ identical strings ("Verdadero.", "Ninguna de las anteriores.") are translated on
   stored progress survives re-parsing and reordering;
 - `fixedOrder` marks true/false questions and questions whose options refer to each other
   ("Ambas respuestas, A y B…", "Ninguna de las anteriores"): their options are not shuffled;
-- both output directories are built aside and swapped in only after a successful build.
+- all outputs are built aside and swapped in only after a successful build.
+
+It also writes static pages for search engines (`tools/build_pages.py`): `site/preguntas/`
+lists the topics, and `site/preguntas/<topic>/` shows every question of a topic with its correct
+answer, in Spanish, as plain HTML. Topics are the PDF's section headings, cleaned up. The app
+does not use these pages; it keeps loading the whole bank as one file. `site/sitemap.xml` lists
+the home page and the topic pages; `site/robots.txt` points to it.
 
 ## Site
 
@@ -152,7 +160,7 @@ make venv      # create .venv and install PyMuPDF
 make fetch     # download the official PDF into source/
 make parse     # rebuild data/pba from the PDF
 make i18n-check
-make site      # build site/data and site/img
+make site      # build site/data, site/img, site/preguntas and site/sitemap.xml
 make test      # Python and JavaScript unit tests
 make serve     # preview at http://127.0.0.1:8000
 ```

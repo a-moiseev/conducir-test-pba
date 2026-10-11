@@ -9,6 +9,8 @@ source/
 # Generated site data (built from data/ with `make site`)
 site/data/
 site/img/
+site/preguntas/
+site/sitemap.xml
 
 # OS / editors
 .DS_Store

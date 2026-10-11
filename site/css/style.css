@@ -880,3 +880,101 @@ a.btn {
   width: auto;
   min-height: 2.5rem;
 }
+
+/* ---------- Static question pages (/preguntas/) ---------- */
+
+.crumbs {
+  margin-bottom: 0.5rem;
+}
+
+.sq-cta {
+  margin: 1.5rem 0 2rem;
+}
+
+.sq {
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.sq__q {
+  font-size: var(--t-md);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.sq__n {
+  color: var(--muted);
+}
+
+.sq__opts {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.sq__opts li {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.sq__key {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.sq__opts li > span:last-child {
+  padding-top: 0.2rem;
+}
+
+.sq__opts .is-right .sq__key {
+  background: var(--green-fill);
+  border-color: var(--green-fill);
+  color: #fff;
+}
+
+.sq__opts .is-right {
+  font-weight: 700;
+}
+
+.sq__mark {
+  display: block;
+  color: var(--green);
+  font-size: var(--t-sm);
+}
+
+.sq__meta {
+  margin-top: 0.75rem;
+}
+
+.topic-list {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.topic-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.topic-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-top: 1rem;
+}
