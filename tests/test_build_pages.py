@@ -67,9 +67,7 @@ class BuildPagesTest(unittest.TestCase):
             sitemap = (Path(tmp) / "sitemap.xml").read_text()
             self.assertIn("<loc>https://conducir.ar/preguntas/motos-clase-a/</loc>", sitemap)
             self.assertTrue((Path(tmp) / "preguntas" / "index.html").exists())
-            promo = (Path(tmp) / "sitios-web" / "index.html").read_text()
-            self.assertIn("mailto:web@conducir.ar", promo)
-            self.assertNotIn("sitios-web", sitemap)
+            self.assertIn('href="/#/web"', seguridad)
 
 
 if __name__ == "__main__":

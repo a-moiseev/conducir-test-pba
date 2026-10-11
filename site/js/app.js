@@ -10,6 +10,7 @@ import { EXAM } from "./lib/exam-rules.js";
 const CLASSES = ["A", "B"];
 const SOURCE_PDF = "https://www.gba.gob.ar/static/seguridadvial/docs/cuestionario.pdf";
 const CONTACT_EMAIL = "hola@conducir.ar";
+const WEB_EMAIL = "web@conducir.ar"; // the author's website offer (#/web), temporary
 const LETTERS = "ABCDEFGH";
 const HISTORY_LIMIT = 20;
 
@@ -188,7 +189,7 @@ function footer() {
       h("a", { href: SOURCE_PDF, target: "_blank", rel: "noopener" }, tr("sourceLink")),
       h("a", { href: "#/about" }, tr("about")),
     ),
-    h("p", h("a", { href: "/sitios-web/" }, tr("promoLink"))),
+    h("p", h("a", { href: "#/web" }, tr("promoLink"))),
   );
 }
 
@@ -896,7 +897,24 @@ function viewAbout() {
       h("p", tr("aboutPrivacy")),
       h("h2.subtitle", tr("aboutContactTitle")),
       h("p", tr("aboutContact"), " ", h("a", { href: `mailto:${CONTACT_EMAIL}` }, CONTACT_EMAIL)),
-      h("p", tr("aboutAuthor"), " ", h("a", { href: "/sitios-web/" }, tr("promoLink"))),
+      h("p", tr("aboutAuthor"), " ", h("a", { href: "#/web" }, tr("promoLink"))),
+      h("p", h("a", { href: "#/" }, tr("back"))),
+    ),
+  );
+}
+
+// ---------- website offer (temporary) ----------
+
+function viewWeb() {
+  render(
+    topBar(),
+    h(
+      "article.stack.about",
+      h("h1.title", tr("webTitle")),
+      h("p", tr("webPitch")),
+      h("p", tr("webHelp")),
+      h("p", tr("webContact"), " ", h("a", { href: `mailto:${WEB_EMAIL}` }, WEB_EMAIL)),
+      h("p", tr("webSignature")),
       h("p", h("a", { href: "#/" }, tr("back"))),
     ),
   );
@@ -917,10 +935,11 @@ const ROUTES = {
   review: [() => viewPractice("review"), "review"],
   glossary: [viewGlossary, "glossary"],
   about: [viewAbout, "about"],
+  web: [viewWeb, "webTitle"],
 };
 
 // Pages that make sense before a license class is chosen.
-const OPEN_ROUTES = new Set(["about"]);
+const OPEN_ROUTES = new Set(["about", "web"]);
 
 function route() {
   navId += 1;
