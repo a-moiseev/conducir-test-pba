@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from i18n import key as translation_key  # noqa: E402  (same key as the translation store)
 from build_pages import build_pages  # noqa: E402
 
-LANGS = ["ru"]
+LANGS = ["en", "ru"]
 SOURCE_URL = "https://www.gba.gob.ar/static/seguridadvial/docs/cuestionario.pdf"
 
 # License category -> question groups it is examined on. The general block applies

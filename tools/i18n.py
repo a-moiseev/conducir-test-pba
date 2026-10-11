@@ -59,7 +59,8 @@ def save_store(lang, store):
 
 def numbers(text):
     text = re.sub(r"(?<=[cс][mм])3\b", "³", text, flags=re.I)  # "cm3"/"см3" is a unit
-    return sorted(re.findall(r"\d+(?:[.,]\d+)?", text))
+    text = re.sub(r"(?<=\d),(?=\d)", ".", text)  # decimal comma (es, ru) = decimal point (en)
+    return sorted(re.findall(r"\d+(?:\.\d+)?", text))
 
 
 def cmd_pending(args):

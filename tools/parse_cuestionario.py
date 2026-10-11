@@ -31,7 +31,8 @@ QNUM_RE = re.compile(r"^\d{1,3}\s*[)-]\s*")
 ELIM_RE = re.compile(r"\(?\s*Pregunta\s+de\s+car[aá]cter\s+eliminatorio\s*\)?", re.I)
 DANGLING_ELIM_RE = re.compile(r"\(\s*(?:Pregunta(?:\s+de(?:\s+car[aá]cter)?)?)?\s*$", re.I)
 # Typos in the source that would otherwise reach the site verbatim.
-SOURCE_TYPOS = {"1, 5 metros": "1,5 metros", "Bicisenda.}": "Bicisenda."}
+SOURCE_TYPOS = {"1, 5 metros": "1,5 metros", "Bicisenda.}": "Bicisenda.",
+                "emergencia.}": "emergencia.", "señal indica }": "señal indica:"}
 NOTE_RE = re.compile(r"\(\s*(Bah[ií]a Blanca|para todas las clases menos para moto)\s*\)", re.I)
 
 # Section heading keyword -> question group. Headings that match nothing are
@@ -317,6 +318,8 @@ def finalize(raw, idx):
     notes = [m.group(1) for m in NOTE_RE.finditer(q)]
     q = clean(NOTE_RE.sub("", q))
     q = QNUM_RE.sub("", q)
+    for typo, fixed in SOURCE_TYPOS.items():
+        q = q.replace(typo, fixed)
     qtype = raw["type"] if len(correct) <= 1 else "multi"
     answers = []
     for a in raw["answers"]:

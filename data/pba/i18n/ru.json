@@ -4723,10 +4723,6 @@
   "es": "¿Está permitido conducir en la vía pública con auriculares puestos?",
   "t": "Разрешено ли водить в наушниках?"
  },
- "934a26ad3111": {
-  "es": "El siguiente símbolo indica que se trata de un carril que debe ser liberado cuando se aproxima un vehículo en emergencia.}",
-  "t": "Этот символ обозначает полосу, которую нужно освободить при приближении транспорта экстренных служб."
- },
  "93694039338d": {
   "es": "Sólo puede verse afectada la conducción en viajes largos.",
   "t": "На вождение это может повлиять только в долгих поездках."
@@ -6146,10 +6142,6 @@
  "be908aa4431b": {
   "es": "El factor ambiental es el principal factor de riesgo ya que las colisiones, en su mayoría, se deben a las condiciones meteorológicas o del camino",
   "t": "Фактор окружающей среды — главный фактор риска, поскольку большинство столкновений происходит из-за погодных условий или состояния дороги."
- },
- "be9ee375959c": {
-  "es": "La siguiente señal indica }",
-  "t": "Знак обозначает"
  },
  "bf1a9d21c6f5": {
   "es": "Al cruce de peatones.",
@@ -7862,6 +7854,10 @@
  "f50d4bc9d9ee": {
   "es": "Con luz roja, detenerse antes de la línea marcada a tal efecto o de la senda peatonal, realizando movimientos hasta que se ponga la luz verde.",
   "t": "На красный остановиться перед стоп-линией или пешеходным переходом и понемногу продвигаться, пока не загорится зелёный."
+ },
+ "f54e5e3253c1": {
+  "es": "El siguiente símbolo indica que se trata de un carril que debe ser liberado cuando se aproxima un vehículo en emergencia.",
+  "t": "Этот символ обозначает полосу, которую нужно освободить при приближении транспорта экстренных служб."
  },
  "f574d592a997": {
   "es": "horquilla",

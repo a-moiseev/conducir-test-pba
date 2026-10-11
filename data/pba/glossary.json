@@ -107,7 +107,7 @@
         {"es": "DNI", "en": "national ID card", "ru": "удостоверение личности (DNI)"},
         {"es": "siniestro (vial)", "en": "road crash", "ru": "ДТП"},
         {"es": "alcoholemia", "en": "blood alcohol (test)", "ru": "содержание алкоголя в крови; тест на алкоголь"},
-        {"es": "infracción, falta", "en": "traffic offence", "ru": "нарушение"},
+        {"es": "infracción, falta", "en": "traffic offense", "ru": "нарушение"},
         {"es": "multa", "en": "fine", "ru": "штраф"},
         {"es": "retención de la licencia", "en": "license seizure", "ru": "изъятие прав"},
         {"es": "inhabilitación", "en": "driving ban", "ru": "лишение права управления"},

@@ -1,7 +1,7 @@
 # Test de Conducir — Provincia de Buenos Aires
 
 A free practice tool for the **Province of Buenos Aires** (PBA) driver's-license theory exam,
-built on the official question bank, with Russian (and later English) translations.
+built on the official question bank, with English and Russian translations.
 
 > Unofficial. The questions and answer keys come from the province's published study material;
 > the real exam may differ. Always check the official sources before your test.
@@ -39,7 +39,7 @@ tools/build_pages.py          static topic pages and sitemap for search engines
 data/pba/questions.json       parsed bank (Spanish), one record per question
 data/pba/images/              question images cropped from the PDF (JPEG; ids hash these bytes)
 data/pba/webp/                WebP copies of them, the files the site serves
-data/pba/i18n/ru.json         Russian translations, keyed by a hash of the Spanish text
+data/pba/i18n/{en,ru}.json    English and Russian translations, keyed by a hash of the Spanish text
 data/pba/glossary.json        road terms (es / en / ru): translation reference and glossary page
 data/pba/answer_keys.json     answer keys the PDF leaves unmarked, with sources
 ```
@@ -120,9 +120,8 @@ site/js/lib/                pure logic, unit-tested with node --test
   question.js, strings.js, storage.js, random.js
 ```
 
-The interface is in Spanish unless the visitor picks Russian (on the class screen
-or on the home page). English strings exist but English is not offered until the question
-bank is translated.
+The interface is in Spanish unless the visitor picks English or Russian (on the class screen
+or on the home page).
 Questions are shown in the selected language with the Spanish original always underneath,
 because the real exam is in Spanish. The mock exam is in Spanish only, like the real one.
 
