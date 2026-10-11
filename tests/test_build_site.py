@@ -102,7 +102,7 @@ class BuildCategoryTest(unittest.TestCase):
         items, dropped = self.build(qs)
         self.assertEqual(len(items), 3)
         self.assertEqual(dropped["duplicate"], 1)
-        self.assertEqual(items[1]["img"], ["img/1.jpg"])
+        self.assertEqual(items[1]["img"], ["img/1.webp"])
 
     def test_translation_attached_when_complete(self):
         key = build_site.translation_key

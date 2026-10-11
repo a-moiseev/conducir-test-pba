@@ -1,8 +1,8 @@
 """Build per-category question files for the static site.
 
 Reads data/pba/questions.json, data/pba/i18n/<lang>.json and data/pba/glossary.json,
-writes site/data/<category>.json and site/data/glossary.json, copies the images the
-questions use to site/img/, and writes the static pages for search engines
+writes site/data/<category>.json and site/data/glossary.json, copies the WebP versions of
+the images the questions use (data/pba/webp, made by make_webp.py) to site/img/, and writes the static pages for search engines
 (site/preguntas/, site/sitemap.xml; see build_pages.py).
 Everything is built aside and swapped in only when everything succeeded.
 
@@ -144,7 +144,7 @@ def build_category(questions, ids, stores, spec):
         if fixed_order(q):
             item["fixedOrder"] = True
         if q.get("images"):
-            item["img"] = [f"img/{name}" for name in q["images"]]
+            item["img"] = [f"img/{webp_name(name)}" for name in q["images"]]
         for lang, store in stores.items():
             loc = localize(q, store)
             if loc:
@@ -156,6 +156,11 @@ def build_category(questions, ids, stores, spec):
             by_text[text_key] = item
         out.append(item)
     return out, dropped, warnings
+
+
+def webp_name(name):
+    """The site serves WebP copies; the JPEG sources stay what question ids are hashed from."""
+    return Path(name).stem + ".webp"
 
 
 def swap_in(tmp, final):
@@ -205,8 +210,11 @@ def main():
     (data_tmp / "glossary.json").write_text(
         json.dumps(glossary, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
+    missing = sorted(name for name in used_images if not (data / "webp" / name).exists())
+    if missing:
+        raise SystemExit(f"no WebP version of {missing[:5]}…: run tools/make_webp.py")
     for name in sorted(used_images):
-        shutil.copy2(data / "images" / name, img_tmp / name)
+        shutil.copy2(data / "webp" / name, img_tmp / name)
     topics = build_pages(built, pages_tmp)
 
     swap_in(data_tmp, site / "data")

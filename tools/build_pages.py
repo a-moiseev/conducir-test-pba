@@ -114,8 +114,8 @@ def page(title, description, path, body):
   <p>Herramienta no oficial. Las preguntas y respuestas salen del cuestionario publicado por la Dirección Provincial de Política y Seguridad Vial; el examen real puede variar.</p>
   <p class="footer__links">
     <a href="/preguntas/">Todas las preguntas</a>
-    <a href="/#/about">Acerca del sitio</a>
     <a href="{SOURCE_URL}" target="_blank" rel="noopener">Cuestionario oficial (PDF)</a>
+    <a href="/#/about">Acerca del sitio</a>
   </p>
 </footer>
 </main>

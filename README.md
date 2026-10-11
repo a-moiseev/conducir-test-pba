@@ -33,10 +33,12 @@ arithmetic.
 ```
 tools/parse_cuestionario.py   PDF -> data/pba/questions.json + data/pba/images/
 tools/i18n.py                 translation store: pending / apply / check
+tools/make_webp.py            data/pba/images/*.jpg -> data/pba/webp/*.webp
 tools/build_site.py           data/pba -> site/data, site/img (+ build_pages.py)
 tools/build_pages.py          static topic pages and sitemap for search engines
 data/pba/questions.json       parsed bank (Spanish), one record per question
-data/pba/images/              question images cropped from the PDF
+data/pba/images/              question images cropped from the PDF (JPEG; ids hash these bytes)
+data/pba/webp/                WebP copies of them, the files the site serves
 data/pba/i18n/ru.json         Russian translations, keyed by a hash of the Spanish text
 data/pba/glossary.json        road terms (es / en / ru): translation reference and glossary page
 data/pba/answer_keys.json     answer keys the PDF leaves unmarked, with sources
@@ -82,7 +84,8 @@ identical strings ("Verdadero.", "Ninguna de las anteriores.") are translated on
 ### Site data
 
 `tools/build_site.py` turns the bank into one file per license category
-(`site/data/a.json`, `site/data/b.json`) and copies the images they use to `site/img/`:
+(`site/data/a.json`, `site/data/b.json`) and copies the WebP versions of the images they use
+to `site/img/`:
 
 - category **A** (motorcycles) = general + motorcycle questions, **B** (cars) = general + car questions;
 - questions without an answer key and exact text duplicates are left out;
@@ -156,7 +159,7 @@ Light and dark themes; the class plate in the header switches between class A an
 ## Usage
 
 ```sh
-make venv      # create .venv and install PyMuPDF
+make venv      # create .venv and install PyMuPDF and Pillow
 make fetch     # download the official PDF into source/
 make parse     # rebuild data/pba from the PDF
 make i18n-check

@@ -185,8 +185,8 @@ function footer() {
     h(
       "p.footer__links",
       h("a", { href: "/preguntas/" }, tr("allQuestions")),
-      h("a", { href: "#/about" }, tr("about")),
       h("a", { href: SOURCE_PDF, target: "_blank", rel: "noopener" }, tr("sourceLink")),
+      h("a", { href: "#/about" }, tr("about")),
     ),
   );
 }

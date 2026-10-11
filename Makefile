@@ -1,7 +1,7 @@
 PY := .venv/bin/python -I
 PDF_URL := https://www.gba.gob.ar/static/seguridadvial/docs/cuestionario.pdf
 
-.PHONY: venv fetch parse i18n-check site test serve
+.PHONY: venv fetch parse webp i18n-check site test serve
 
 venv:
 	python3 -m venv .venv
@@ -15,6 +15,11 @@ fetch:
 # PDF -> data/pba/questions.json + data/pba/images/
 parse:
 	$(PY) tools/parse_cuestionario.py source/cuestionario.pdf data/pba
+	$(PY) tools/make_webp.py data/pba
+
+# data/pba/images/*.jpg -> data/pba/webp/*.webp (what the site serves)
+webp:
+	$(PY) tools/make_webp.py data/pba
 
 i18n-check:
 	$(PY) tools/i18n.py check ru
