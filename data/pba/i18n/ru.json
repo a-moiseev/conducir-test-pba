@@ -867,6 +867,10 @@
   "es": "Cascos ¿cuando es obligatorio?",
   "t": "Когда шлем обязателен?"
  },
+ "18d6b0d147f2": {
+  "es": "Calle con Bicisenda.",
+  "t": "Улица с велодорожкой."
+ },
  "18d888ac0683": {
   "es": "¿Está permitido llevar carga en una bicicleta?",
   "t": "Разрешено ли перевозить груз на велосипеде?"
@@ -5370,10 +5374,6 @@
  "a709f7d5f4ad": {
   "es": "¿Cómo debe advertir la maniobra de giro?:",
   "t": "Как нужно предупреждать о повороте?"
- },
- "a73a32366ac9": {
-  "es": "Calle con Bicisenda.}",
-  "t": "Улица с велодорожкой."
  },
  "a742cb5f35a8": {
   "es": "En ningún caso.",

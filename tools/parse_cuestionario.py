@@ -31,7 +31,7 @@ QNUM_RE = re.compile(r"^\d{1,3}\s*[)-]\s*")
 ELIM_RE = re.compile(r"\(?\s*Pregunta\s+de\s+car[aá]cter\s+eliminatorio\s*\)?", re.I)
 DANGLING_ELIM_RE = re.compile(r"\(\s*(?:Pregunta(?:\s+de(?:\s+car[aá]cter)?)?)?\s*$", re.I)
 # Typos in the source that would otherwise reach the site verbatim.
-SOURCE_TYPOS = {"1, 5 metros": "1,5 metros"}
+SOURCE_TYPOS = {"1, 5 metros": "1,5 metros", "Bicisenda.}": "Bicisenda."}
 NOTE_RE = re.compile(r"\(\s*(Bah[ií]a Blanca|para todas las clases menos para moto)\s*\)", re.I)
 
 # Section heading keyword -> question group. Headings that match nothing are
