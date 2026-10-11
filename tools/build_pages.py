@@ -5,6 +5,7 @@ search engines see and where search visitors land. They are in Spanish only and 
 
     /preguntas/            topics with question counts
     /preguntas/<topic>/    every question of the topic, correct answers marked
+    /sitios-web/           the author's offer to build websites (temporary; not in the sitemap)
     /sitemap.xml
 """
 import re
@@ -16,6 +17,8 @@ SITE_URL = "https://conducir.ar"
 APP_NAME = "Test de Conducir PBA"
 SOURCE_URL = "https://www.gba.gob.ar/static/seguridadvial/docs/cuestionario.pdf"
 LETTERS = "ABCDEFGH"
+PROMO_EMAIL = "web@conducir.ar"
+PROMO_LINK = '<p><a href="/sitios-web/">¿Necesitás un sitio web para tu negocio?</a></p>'
 
 # Section headings of the PDF, cleaned up ("4) Preguntas para todas las Clases: varias").
 # Headings not listed here keep their own wording.
@@ -117,6 +120,7 @@ def page(title, description, path, body):
     <a href="{SOURCE_URL}" target="_blank" rel="noopener">Cuestionario oficial (PDF)</a>
     <a href="/#/about">Acerca del sitio</a>
   </p>
+  {PROMO_LINK}
 </footer>
 </main>
 </body>
@@ -194,6 +198,20 @@ def index_page(topics):
     return page(title, description, "/preguntas/", body)
 
 
+def promo_page():
+    body = "\n".join([
+        '<article class="stack about">',
+        '<h1 class="title">Un sitio como este, para tu negocio</h1>',
+        "<p>Rápido, simple, funciona bien en el celular y aparece en Google.</p>",
+        "<p>Diseño a medida. Te ayudo con el dominio y el hosting.</p>",
+        f'<p>Contame qué hace tu negocio y te paso una propuesta: <a href="mailto:{PROMO_EMAIL}">{PROMO_EMAIL}</a></p>',
+        "<p>Alexey</p>",
+        "</article>",
+    ])
+    return page("Un sitio web para tu negocio", "Sitios web rápidos y simples, hechos a medida.",
+                "/sitios-web/", body)
+
+
 def sitemap(paths):
     urls = "\n".join(f"  <url><loc>{escape(SITE_URL + p)}</loc></url>" for p in paths)
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -213,6 +231,8 @@ def build_pages(categories, out_dir):
         (root / topic["slug"]).mkdir()
         (root / topic["slug"] / "index.html").write_text(
             topic_page(topic, prev_topic, next_topic), encoding="utf-8")
+    (Path(out_dir) / "sitios-web").mkdir()
+    (Path(out_dir) / "sitios-web" / "index.html").write_text(promo_page(), encoding="utf-8")
     paths = ["/", "/preguntas/", *(f"/preguntas/{t['slug']}/" for t in topics)]
     (Path(out_dir) / "sitemap.xml").write_text(sitemap(paths), encoding="utf-8")
     return len(topics)

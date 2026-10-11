@@ -220,6 +220,7 @@ def main():
     swap_in(data_tmp, site / "data")
     swap_in(img_tmp, site / "img")
     swap_in(pages_tmp / "preguntas", site / "preguntas")
+    swap_in(pages_tmp / "sitios-web", site / "sitios-web")
     (pages_tmp / "sitemap.xml").replace(site / "sitemap.xml")
     pages_tmp.rmdir()
     print(f"images: {len(used_images)}, topic pages: {topics}")

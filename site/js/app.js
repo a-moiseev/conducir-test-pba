@@ -188,6 +188,7 @@ function footer() {
       h("a", { href: SOURCE_PDF, target: "_blank", rel: "noopener" }, tr("sourceLink")),
       h("a", { href: "#/about" }, tr("about")),
     ),
+    h("p", h("a", { href: "/sitios-web/" }, tr("promoLink"))),
   );
 }
 
@@ -895,6 +896,7 @@ function viewAbout() {
       h("p", tr("aboutPrivacy")),
       h("h2.subtitle", tr("aboutContactTitle")),
       h("p", tr("aboutContact"), " ", h("a", { href: `mailto:${CONTACT_EMAIL}` }, CONTACT_EMAIL)),
+      h("p", tr("aboutAuthor"), " ", h("a", { href: "/sitios-web/" }, tr("promoLink"))),
       h("p", h("a", { href: "#/" }, tr("back"))),
     ),
   );

@@ -100,6 +100,8 @@ lists the topics, and `site/preguntas/<topic>/` shows every question of a topic 
 answer, in Spanish, as plain HTML. Topics are the PDF's section headings, cleaned up. The app
 does not use these pages; it keeps loading the whole bank as one file. `site/sitemap.xml` lists
 the home page and the topic pages; `site/robots.txt` points to it.
+`site/sitios-web/` is the author's offer to build websites, linked from the footers and the
+About page; it is temporary and left out of the sitemap.
 
 ## Site
 
