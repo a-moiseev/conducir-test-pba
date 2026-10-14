@@ -7,6 +7,8 @@ export const LANG_NAMES = { es: "Español", en: "English", ru: "Русский" 
 const STRINGS = {
   es: {
     close: "Cerrar",
+    translationShow: "Mostrar traducción",
+    translationHide: "Ocultar traducción",
     switchClass: "Cambiar a la clase {cls}",
     examSpanish: "Las preguntas están solo en español, como en el examen real.",
     glossaryIntro: "Términos que aparecen en las preguntas del examen.",
@@ -97,6 +99,8 @@ const STRINGS = {
   },
   en: {
     close: "Close",
+    translationShow: "Show translation",
+    translationHide: "Hide translation",
     switchClass: "Switch to class {cls}",
     examSpanish: "Questions are in Spanish only, as in the real exam.",
     glossaryIntro: "Terms that come up in the exam questions, with their English meaning.",
@@ -187,6 +191,8 @@ const STRINGS = {
   },
   ru: {
     close: "Закрыть",
+    translationShow: "Показать перевод",
+    translationHide: "Скрыть перевод",
     switchClass: "Переключить на класс {cls}",
     examSpanish: "Вопросы только на испанском, как на настоящем экзамене.",
     glossaryIntro: "Термины, которые встречаются в вопросах экзамена, с переводом на русский.",

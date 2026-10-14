@@ -523,13 +523,22 @@ a {
   line-height: 1.35;
 }
 
-/* Spanish original under the translation: the real exam is in Spanish */
-.original {
+/* Translation under the Spanish text: the real exam is in Spanish */
+.trans {
   display: block;
   margin-top: 0.3rem;
   color: var(--muted);
   font-size: var(--t-sm);
-  font-style: italic;
+  font-weight: 400;
+}
+
+[data-hide-translation] .trans {
+  display: none;
+}
+
+.trans-toggle {
+  margin: -0.25rem 0 0.75rem;
+  font-size: var(--t-sm);
 }
 
 .qimg {

@@ -116,6 +116,7 @@ function applyTheme() {
   if (settings.theme) document.documentElement.dataset.theme = settings.theme;
   else delete document.documentElement.dataset.theme;
   document.documentElement.lang = settings.lang || "es";
+  document.documentElement.toggleAttribute("data-hide-translation", Boolean(settings.hideTranslation));
 }
 
 const ICON_SUN =
@@ -223,9 +224,10 @@ function formatDuration(ms) {
 
 // ---------- question card (practice, exam and reviews share it) ----------
 
-// Renders a question with its options. The translation, when there is one, is shown with
-// the Spanish original under it: the real exam is in Spanish. `translate: false` shows
-// Spanish only. Options are numbered by display position (A, B, C…).
+// Renders a question with its options. Spanish comes first — the real exam is in Spanish —
+// with the translation, when there is one, in smaller text under it (hidden by the
+// translation toggle). `translate: false` shows Spanish only. Options are numbered by
+// display position (A, B, C…).
 function questionCard(q, { order, selected, translate = true, onToggle }) {
   const lang = translate ? settings.lang : "es";
   const text = localized(q, lang);
@@ -244,8 +246,8 @@ function questionCard(q, { order, selected, translate = true, onToggle }) {
       h("span.opt__key", LETTERS[pos]),
       h(
         "span.opt__text",
-        h("span", { lang: translated ? lang : "es" }, text.answers[orig]),
-        translated && h("span.original", { lang: "es" }, q.es.answers[orig]),
+        h("span", { lang: "es" }, q.es.answers[orig]),
+        translated && h("span.trans", { lang }, text.answers[orig]),
       ),
     );
     btn.dataset.orig = orig;
@@ -256,8 +258,8 @@ function questionCard(q, { order, selected, translate = true, onToggle }) {
     q.eliminatory && h("p.badge-elim", { title: tr("eliminatoryHint") }, tr("eliminatory")),
     h(
       "h2.qtext",
-      h("span", { lang: translated ? lang : "es" }, text.q),
-      translated && h("span.original", { lang: "es" }, q.es.q),
+      h("span", { lang: "es" }, q.es.q),
+      translated && h("span.trans", { lang }, text.q),
     ),
     (q.img || []).map((src) => h("figure.qimg", h("img", { src, alt: "", loading: "eager" }))),
     multi && h("p.multi-hint", tr("pickAll")),
@@ -310,6 +312,27 @@ function optionKeys(order, onPick, button) {
       button.click();
     }
   };
+}
+
+// Shows or hides the translations under the Spanish text. Flips a root attribute rather
+// than re-rendering, so an answered question keeps its state.
+function translationToggle() {
+  const label = () => (settings.hideTranslation ? tr("translationShow") : tr("translationHide"));
+  const btn = h(
+    "button.link-btn.link-btn--plain",
+    {
+      type: "button",
+      "aria-pressed": String(!settings.hideTranslation),
+      onclick: () => {
+        saveSettings({ hideTranslation: !settings.hideTranslation });
+        applyTheme();
+        btn.textContent = label();
+        btn.setAttribute("aria-pressed", String(!settings.hideTranslation));
+      },
+    },
+    label(),
+  );
+  return btn;
 }
 
 // ---------- onboarding ----------
@@ -545,6 +568,7 @@ async function viewPractice(mode = "practice") {
             h("a", { href: "#/" }, tr("home")),
           ),
         ),
+        hasTranslation(q, settings.lang) && h("p.trans-toggle", translationToggle()),
         settings.lang === "en" && !hasTranslation(q, "en") && h("p.notice", tr("noTranslation")),
         card.nodes,
         verdict,
