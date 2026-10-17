@@ -28,6 +28,14 @@ filled in by hand in `data/pba/answer_keys.json`, each with its basis: a keyed t
 question elsewhere in the bank, the official *Manual del Conductor*, Ley 24.449, or plain
 arithmetic.
 
+Answers that later laws made wrong are handled in `data/pba/corrections.json`: where the
+right answer is among the options the key is replaced and the site shows a note naming the law;
+where it is not (or the question no longer makes sense) the question is left out. Current
+entries follow Alcohol Cero (Ley 15.402 PBA and Ley 27.714, 2023), helmet and vest for both
+motorcycle riders (Ley 15.143 PBA, 2019) and the cédula changes (Disposición DNRPA 29/2024:
+no expiry, no more cédula azul). Questions whose key contradicts a law that has not changed
+since 2019 (Ley 24.449, Decreto 532/09) are left out too, with kind `contradicts law`.
+
 ## Repository layout
 
 ```
@@ -42,6 +50,7 @@ data/pba/webp/                WebP copies of them, the files the site serves
 data/pba/i18n/{en,ru}.json    English and Russian translations, keyed by a hash of the Spanish text
 data/pba/glossary.json        road terms (es / en / ru): translation reference and glossary page
 data/pba/answer_keys.json     answer keys the PDF leaves unmarked, with sources
+data/pba/corrections.json     keys fixed or questions dropped after later laws, with sources
 ```
 
 ### Question record

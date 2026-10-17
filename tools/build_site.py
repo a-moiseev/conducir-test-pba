@@ -1,7 +1,8 @@
 """Build per-category question files for the static site.
 
 Reads data/pba/questions.json, data/pba/i18n/<lang>.json and data/pba/glossary.json,
-writes site/data/<category>.json and site/data/glossary.json, copies the WebP versions of
+applies the hand-made answer keys and corrections for later laws (answer_keys.json,
+corrections.json), writes site/data/<category>.json and site/data/glossary.json, copies the WebP versions of
 the images the questions use (data/pba/webp, made by make_webp.py) to site/img/, and writes the static pages for search engines
 (site/preguntas/, site/sitemap.xml; see build_pages.py).
 Everything is built aside and swapped in only when everything succeeded.
@@ -112,6 +113,36 @@ def apply_answer_keys(questions, entries):
     return len(entries)
 
 
+def apply_corrections(questions, entries):
+    """Fix the 2019 bank where its answers no longer hold (data/pba/corrections.json).
+
+    Each entry applies to every question with exactly its Spanish text and options (the PDF
+    repeats some): "key" replaces the answer key, which must already exist, and attaches the
+    note shown with the question; "drop" leaves the question out of the site, counted under
+    the entry's "kind". Anything that does not match stops the build.
+    """
+    for entry in entries:
+        matches = [q for q in questions
+                   if q["es"]["q"] == entry["q"] and q["es"]["answers"] == entry["answers"]]
+        if not matches:
+            raise SystemExit(f"correction matches no question: {entry['q'][:60]!r}")
+        for q in matches:
+            if entry["action"] == "drop":
+                q["dropped_for"] = entry["kind"]
+                continue
+            if entry["action"] != "key":
+                raise SystemExit(f"unknown correction action {entry['action']!r}")
+            answers = q["es"]["answers"]
+            missing = [a for a in entry["correct"] if a not in answers]
+            if missing or not q["correct"]:
+                raise SystemExit(f"correction does not fit {entry['q'][:60]!r}: options {missing}, key {q['correct']}")
+            q["correct"] = sorted(answers.index(a) for a in entry["correct"])
+            if len(q["correct"]) > 1:
+                q["type"] = "multi"
+            q["fix"] = entry["note"]
+    return len(entries)
+
+
 def build_category(questions, ids, stores, spec):
     """Returns (items, dropped, warnings) for one license category."""
     out, dropped, warnings = [], Counter(), []
@@ -124,6 +155,9 @@ def build_category(questions, ids, stores, spec):
             continue
         if not q["correct"]:
             dropped["no answer key in source"] += 1
+            continue
+        if q.get("dropped_for"):
+            dropped[f"corrections: {q['dropped_for']}"] += 1
             continue
         # Exact repeats without images add nothing to practice; keep the first copy,
         # but never lose an eliminatory flag and report inconsistent answer keys.
@@ -145,6 +179,8 @@ def build_category(questions, ids, stores, spec):
             item["fixedOrder"] = True
         if q.get("images"):
             item["img"] = [f"img/{webp_name(name)}" for name in q["images"]]
+        if q.get("fix"):
+            item["fix"] = q["fix"]
         for lang, store in stores.items():
             loc = localize(q, store)
             if loc:
@@ -183,6 +219,10 @@ def main():
     if keys_file.exists():
         count = apply_answer_keys(questions, json.loads(keys_file.read_text(encoding="utf-8"))["keys"])
         print(f"answer keys added by hand: {count}")
+    fixes_file = data / "corrections.json"
+    if fixes_file.exists():
+        count = apply_corrections(questions, json.loads(fixes_file.read_text(encoding="utf-8"))["corrections"])
+        print(f"corrections: {count}")
 
     data_tmp, img_tmp, pages_tmp = site / "data.tmp", site / "img.tmp", site / "pages.tmp"
     for tmp in (data_tmp, img_tmp, pages_tmp):

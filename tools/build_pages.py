@@ -142,6 +142,8 @@ def question_html(item, classes, number):
         cls = ' class="is-right"' if right else ""
         parts.append(f'<li{cls}><span class="sq__key">{LETTERS[i]}</span><span>{escape(answer)}{mark}</span></li>')
     parts.append("</ol>")
+    if item.get("fix"):
+        parts.append(f'<p class="notice">{escape(item["fix"]["es"])}</p>')
     parts.append(f'<p class="sq__meta muted small">{classes_label(classes)}. '
                  f'Cuestionario oficial, pág. {item["src"]["page"]}.</p>')
     parts.append("</article>")

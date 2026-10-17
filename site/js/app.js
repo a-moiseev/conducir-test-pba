@@ -254,6 +254,9 @@ function questionCard(q, { order, selected, translate = true, onToggle }) {
     return btn;
   });
 
+  // Answer updated for a law passed after the 2019 bank: shown once the answer is revealed.
+  const fixNote = q.fix && h("p.notice", { hidden: true }, q.fix[settings.lang] || q.fix.es);
+
   const nodes = [
     q.eliminatory && h("p.badge-elim", { title: tr("eliminatoryHint") }, tr("eliminatory")),
     h(
@@ -264,6 +267,7 @@ function questionCard(q, { order, selected, translate = true, onToggle }) {
     (q.img || []).map((src) => h("figure.qimg", h("img", { src, alt: "", loading: "eager" }))),
     multi && h("p.multi-hint", tr("pickAll")),
     h("ul.options", { "aria-label": multi ? tr("pickAll") : tr("pickOne") }, optionButtons.map((b) => h("li", b))),
+    fixNote,
   ];
 
   return {
@@ -282,6 +286,7 @@ function questionCard(q, { order, selected, translate = true, onToggle }) {
         else if (selected.has(orig)) btn.classList.add("opt--wrong");
         else btn.classList.add("opt--dim");
       }
+      if (fixNote) fixNote.hidden = false;
     },
   };
 }
@@ -908,6 +913,20 @@ async function openGlossaryDialog() {
 
 // ---------- about ----------
 
+// The laws data/pba/corrections.json follows, one line per kind of change.
+const LAW_FIXES = [
+  ["fixAlcohol", [
+    ["Ley 15.402 (PBA, 2023)", "https://normas.gba.gob.ar/documentos/VrlrpQhO.html"],
+    ["Ley 27.714 (2023)", "https://www.argentina.gob.ar/normativa/nacional/383043/texto"],
+  ]],
+  ["fixVest", [["Ley 15.143 (PBA, 2019)", "https://normas.gba.gob.ar/ar-b/ley/2019/15143/205521"]]],
+  ["fixCedula", [["Disposición DNRPA 29/2024", "https://www.boletinoficial.gob.ar/detalleAviso/primera/307350/20240513"]]],
+  ["fixContradicts", [
+    ["Ley 24.449", "https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/818/texact.htm"],
+    ["Decreto 532/09 (PBA)", "https://normas.gba.gob.ar/documentos/B3yPzhj0.html"],
+  ]],
+];
+
 function viewAbout() {
   const rules = { total: EXAM.questions, elim: EXAM.eliminatory, ratio: Math.round(EXAM.passRatio * 100) };
   render(
@@ -919,6 +938,21 @@ function viewAbout() {
       h("p", tr("aboutSource", rules), " ", h("a", { href: SOURCE_PDF, target: "_blank", rel: "noopener" }, tr("sourceLink")), "."),
       h("p", tr("aboutUnofficial")),
       h("p", tr("aboutPrivacy")),
+      h("h2.subtitle", tr("aboutDocsTitle")),
+      h("p", tr("aboutDocs")),
+      h(
+        "ul.about__fixes",
+        LAW_FIXES.map(([key, laws]) =>
+          h(
+            "li",
+            tr(key),
+            " ",
+            laws.map(([name, href], i) => [i ? ", " : "", h("a", { href, target: "_blank", rel: "noopener" }, name)]),
+            ".",
+          ),
+        ),
+      ),
+      h("p", tr("aboutDocsNote")),
       h("h2.subtitle", tr("aboutContactTitle")),
       h("p", tr("aboutContact"), " ", h("a", { href: `mailto:${CONTACT_EMAIL}` }, CONTACT_EMAIL)),
       h("p", tr("aboutAuthor"), " ", h("a", { href: "#/web" }, tr("promoLink"))),

@@ -468,6 +468,14 @@ a {
   margin-top: 2rem;
 }
 
+.about__fixes {
+  padding-left: 1.25rem;
+}
+
+.about__fixes li + li {
+  margin-top: 0.5rem;
+}
+
 /* ---------- Question ---------- */
 
 .qhead {

@@ -155,3 +155,34 @@ class AnswerKeysTest(unittest.TestCase):
             build_site.apply_answer_keys(unkeyed, [self.entry("X", ["z"])])
         with self.assertRaises(SystemExit):  # the PDF already has a key
             build_site.apply_answer_keys([q("X", ["a", "b"])], [self.entry("X", ["b"])])
+
+
+class CorrectionsTest(unittest.TestCase):
+    note = {"es": "n", "en": "n", "ru": "n"}
+
+    def test_key_fix_applies_to_every_copy_and_carries_the_note(self):
+        qs = [q("¿Alcohol?", ["0,5", "0,0"]), q("¿Alcohol?", ["0,5", "0,0"], page=9)]
+        build_site.apply_corrections(qs, [{"q": "¿Alcohol?", "answers": ["0,5", "0,0"], "action": "key",
+                                           "correct": ["0,0"], "note": self.note}])
+        self.assertEqual([x["correct"] for x in qs], [[1], [1]])
+        self.assertEqual(qs[1]["fix"], self.note)
+
+    def test_drop_matches_options_too(self):
+        qs = [q("¿Prioridad?", ["a", "b"]), q("¿Prioridad?", ["c", "d"])]  # image variants share the text
+        build_site.apply_corrections(qs, [{"q": "¿Prioridad?", "answers": ["a", "b"], "action": "drop",
+                                           "kind": "contradicts law"}])
+        items, dropped, _ = build_site.build_category(qs, ["x1", "x2"], {}, build_site.CATEGORIES["b"])
+        self.assertEqual([i["id"] for i in items], ["x2"])
+        self.assertEqual(dropped["corrections: contradicts law"], 1)
+
+    def test_rejects_bad_entries(self):
+        with self.assertRaises(SystemExit):  # no such question
+            build_site.apply_corrections([q("X", ["a"])], [{"q": "Y", "answers": ["a"], "action": "drop", "kind": "k"}])
+        with self.assertRaises(SystemExit):  # same text, other options
+            build_site.apply_corrections([q("X", ["a"])], [{"q": "X", "answers": ["b"], "action": "drop", "kind": "k"}])
+        with self.assertRaises(SystemExit):  # unknown option
+            build_site.apply_corrections([q("X", ["a"])], [{"q": "X", "answers": ["a"], "action": "key",
+                                                            "correct": ["z"], "note": {}}])
+        with self.assertRaises(SystemExit):  # unkeyed question: answer_keys.json is the place for it
+            build_site.apply_corrections([q("X", ["a"], correct=())], [{"q": "X", "answers": ["a"], "action": "key",
+                                                                        "correct": ["a"], "note": {}}])

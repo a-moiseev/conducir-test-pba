@@ -1,0 +1,320 @@
+{
+  "note": "Changes to the official question bank (2019). Each entry matches every question with exactly this Spanish text and these options (the PDF repeats some). 'key' replaces the answer key (options named by their Spanish text) and shows 'note' with the question; 'drop' leaves the question out of the site. 'kind' is 'later law' (a law passed after the bank changed the answer) or 'contradicts law' (the key contradicts a law that has not changed). 'why' and 'sources' document the change; they are not shipped.",
+  "corrections": [
+    {
+      "q": "¿Cuál es el nivel máximo de alcoholemia admitido para el conductor del vehículo que se visualiza en la imagen?",
+      "answers": [
+        "0,5 gramos de alcohol por litro de sangre.",
+        "0,0 gramos de alcohol por litro de sangre.",
+        "0,2 gramos de alcohol por litro de sangre."
+      ],
+      "action": "key",
+      "kind": "later law",
+      "correct": [
+        "0,0 gramos de alcohol por litro de sangre."
+      ],
+      "note": {
+        "es": "Respuesta actualizada. El cuestionario marca 0,5 g/l, pero desde 2023 rige Alcohol Cero: la Ley provincial 15.402 y la Ley nacional 27.714 prohíben conducir con cualquier nivel de alcohol en sangre.",
+        "en": "Answer updated. The question bank marks 0.5 g/l, but zero alcohol has applied since 2023: provincial Ley 15.402 and national Ley 27.714 ban driving with any alcohol in the blood.",
+        "ru": "Ответ обновлён. В вопроснике отмечено 0,5 г/л, но с 2023 года действует нулевой алкоголь: провинциальный закон 15.402 и национальный закон 27.714 запрещают водить с любым уровнем алкоголя в крови."
+      },
+      "sources": [
+        "https://normas.gba.gob.ar/documentos/VrlrpQhO.html",
+        "https://www.argentina.gob.ar/normativa/nacional/383043/texto"
+      ]
+    },
+    {
+      "q": "Durante la circulación en ciclomotores, motocicletas y triciclos motorizados, el uso de chaleco reflectante es obligatorio:",
+      "answers": [
+        "Para el conductor, únicamente",
+        "Para el conductor y acompañante",
+        "Sólo para el acompañante."
+      ],
+      "action": "key",
+      "kind": "later law",
+      "correct": [
+        "Para el conductor y acompañante"
+      ],
+      "note": {
+        "es": "Respuesta actualizada. El cuestionario marca otra opción, pero desde 2019 la Ley 15.143 (art. 48 de la Ley 13.927) exige casco y chaleco reflectante con el dominio tanto al conductor como al acompañante.",
+        "en": "Answer updated. The question bank marks another option, but since 2019 Ley 15.143 (art. 48 of Ley 13.927) requires both rider and passenger to wear a helmet and a reflective vest showing the plate number.",
+        "ru": "Ответ обновлён. В вопроснике отмечен другой вариант, но с 2019 года закон 15.143 (ст. 48 закона 13.927) требует и от водителя, и от пассажира шлем и светоотражающий жилет с номером мотоцикла."
+      },
+      "sources": [
+        "https://normas.gba.gob.ar/ar-b/ley/2019/15143/205521"
+      ]
+    },
+    {
+      "q": "Los conductores y acompañantes de motocicletas, ciclomotores y triciclos motorizados deberán circular con casco reglamentario y chaleco reflectante, los cuales tendrán impreso, en forma legible, el dominio del vehículo que conducen",
+      "answers": [
+        "Verdadero.",
+        "Falso."
+      ],
+      "action": "key",
+      "kind": "later law",
+      "correct": [
+        "Verdadero."
+      ],
+      "note": {
+        "es": "Respuesta actualizada. El cuestionario marca otra opción, pero desde 2019 la Ley 15.143 (art. 48 de la Ley 13.927) exige casco y chaleco reflectante con el dominio tanto al conductor como al acompañante.",
+        "en": "Answer updated. The question bank marks another option, but since 2019 Ley 15.143 (art. 48 of Ley 13.927) requires both rider and passenger to wear a helmet and a reflective vest showing the plate number.",
+        "ru": "Ответ обновлён. В вопроснике отмечен другой вариант, но с 2019 года закон 15.143 (ст. 48 закона 13.927) требует и от водителя, и от пассажира шлем и светоотражающий жилет с номером мотоцикла."
+      },
+      "sources": [
+        "https://normas.gba.gob.ar/ar-b/ley/2019/15143/205521"
+      ]
+    },
+    {
+      "q": "¿Cuál es el grado máximo de alcoholemia permitido para conducir un automóvil?:",
+      "answers": [
+        "0,5 gramos por litro de sangre",
+        "0,2 gramos por litro de sangre",
+        "0,05 gramos por litro de sangre"
+      ],
+      "action": "drop",
+      "kind": "later law",
+      "why": "Alcohol Cero (Ley 15.402, Ley 27.714): the right answer, 0 g/l, is not among the options.",
+      "sources": [
+        "https://normas.gba.gob.ar/documentos/VrlrpQhO.html",
+        "https://www.argentina.gob.ar/normativa/nacional/383043/texto"
+      ]
+    },
+    {
+      "q": "Cuál es el dosaje máximo de alcohol en sangre permitido para conducir…",
+      "answers": [
+        "0.2 gr por litro de sangre.",
+        "0.5 gr por litro de sangre.",
+        "1.5 gr por litro de sangre."
+      ],
+      "action": "drop",
+      "kind": "later law",
+      "why": "Alcohol Cero (Ley 15.402, Ley 27.714): the right answer, 0 g/l, is not among the options.",
+      "sources": [
+        "https://normas.gba.gob.ar/documentos/VrlrpQhO.html",
+        "https://www.argentina.gob.ar/normativa/nacional/383043/texto"
+      ]
+    },
+    {
+      "q": "Con una cantidad mayor a 1 gr/l de alcohol en sangre detectado en controles de alcoholemia se procederá al secuestro del vehículo y se incurrirá en falta grave reteniendo la licencia del conductor.",
+      "answers": [
+        "Verdadero.",
+        "Falso."
+      ],
+      "action": "drop",
+      "kind": "later law",
+      "why": "Built on the old 1 g/l threshold; since Alcohol Cero any level above 0 is an offence, with sanctions in other bands (Ley 15.402).",
+      "sources": [
+        "https://normas.gba.gob.ar/documentos/VrlrpQhO.html"
+      ]
+    },
+    {
+      "q": "Con esta documentación, ¿quién está autorizado a conducir el vehículo?",
+      "answers": [
+        "Nadie, porque está vencida y debe renovarse.",
+        "Sólo el titular.",
+        "El titular y sus familiares directos, por tener el mismo apellido."
+      ],
+      "action": "drop",
+      "kind": "later law",
+      "why": "Cédulas no longer expire while the owner stays the same (DNU 70/2023, Disposición DNRPA 29/2024); none of the options is right now.",
+      "sources": [
+        "https://www.boletinoficial.gob.ar/detalleAviso/primera/307350/20240513"
+      ]
+    },
+    {
+      "q": "¿Cuántas “cédulas para autorizados a conducir” podrán otorgarse para un mismo vehículo?",
+      "answers": [
+        "Sólo una.",
+        "La cantidad que solicite el titular del vehículo.",
+        "Hasta cinco."
+      ],
+      "action": "drop",
+      "kind": "later law",
+      "why": "The cédula for authorized drivers (cédula azul) was abolished (Disposición DNRPA 29/2024).",
+      "sources": [
+        "https://www.boletinoficial.gob.ar/detalleAviso/primera/307350/20240513"
+      ]
+    },
+    {
+      "q": "¿Se puede manejar un vehículo con “cédula para autorizado a conducir” a nombre de otra persona?",
+      "answers": [
+        "Siempre y cuando se encuentre vigente.",
+        "Sólo si es un familiar directo o tiene una relación laboral.",
+        "En ningún caso."
+      ],
+      "action": "drop",
+      "kind": "later law",
+      "why": "The cédula for authorized drivers (cédula azul) was abolished (Disposición DNRPA 29/2024).",
+      "sources": [
+        "https://www.boletinoficial.gob.ar/detalleAviso/primera/307350/20240513"
+      ]
+    },
+    {
+      "q": "¿Se puede manejar un vehículo con “cédula azul ” a nombre de otra persona?",
+      "answers": [
+        "Siempre y cuando se encuentre vigente.",
+        "Sólo si es un familiar directo o tiene una relación laboral.",
+        "En ningún caso."
+      ],
+      "action": "drop",
+      "kind": "later law",
+      "why": "The cédula for authorized drivers (cédula azul) was abolished (Disposición DNRPA 29/2024).",
+      "sources": [
+        "https://www.boletinoficial.gob.ar/detalleAviso/primera/307350/20240513"
+      ]
+    },
+    {
+      "q": "¿A qué velocidad precautoria se debe cruzar una bocacalle sin semáforo?:",
+      "answers": [
+        "A la misma velocidad que la de la vía por la que circula.",
+        "A no más de 30 km/h.",
+        "A no más de 10 km/h."
+      ],
+      "action": "drop",
+      "kind": "contradicts law",
+      "why": "Art. 51 e.1 Ley 24.449: at unsignalled urban crossings the precautionary speed is never above 30 km/h; the key says 10 km/h (the bank itself keys 30 elsewhere).",
+      "sources": [
+        "https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/818/texact.htm"
+      ]
+    },
+    {
+      "q": "Los vehículos que circulan por la siguiente avenida, al llegar a esta bocacalle sin semáforos, ¿cuál es el límite superior de velocidad precautoria que deben respetar?",
+      "answers": [
+        "20 kilómetros por hora.",
+        "40 kilómetros por hora.",
+        "30 kilómetros por hora."
+      ],
+      "action": "drop",
+      "kind": "contradicts law",
+      "why": "Art. 51 e.1 Ley 24.449: 30 km/h at unsignalled urban crossings, avenues included; the key says 40.",
+      "sources": [
+        "https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/818/texact.htm"
+      ]
+    },
+    {
+      "q": "¿Qué vehículo tiene prioridad de paso en esta intersección sin semáforo?",
+      "answers": [
+        "El vehículo A porque circula por una avenida.",
+        "El vehículo B porque circula por la derecha.",
+        "Es indistinto ya que es una esquina sin semáforo."
+      ],
+      "action": "drop",
+      "kind": "contradicts law",
+      "why": "Art. 41 Ley 24.449: priority belongs to the vehicle on the right; avenues are not an exception. The key gives it to the avenue.",
+      "sources": [
+        "https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/818/texact.htm"
+      ]
+    },
+    {
+      "q": "En la siguiente situación, ¿a quién le corresponde la prioridad de paso?",
+      "answers": [
+        "Al vehículo A, ya que circula por la derecha.",
+        "Al vehículo B, ya que circula por una avenida.",
+        "Es indistinto."
+      ],
+      "action": "drop",
+      "kind": "contradicts law",
+      "why": "Art. 41 Ley 24.449: priority belongs to the vehicle on the right; avenues are not an exception. The key gives it to the avenue.",
+      "sources": [
+        "https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/818/texact.htm"
+      ]
+    },
+    {
+      "q": "Para realizar un giro o circular en rotondas se debe:",
+      "answers": [
+        "Dar prioridad de paso al que circula desde la derecha.",
+        "Respetar la señalización.",
+        "Dar prioridad de paso al vehículo de mayor porte."
+      ],
+      "action": "drop",
+      "kind": "contradicts law",
+      "why": "Art. 41 b and art. 43 Ley 24.449: in a roundabout the vehicle already in it has priority; the key says the one from the right.",
+      "sources": [
+        "https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/818/texact.htm"
+      ]
+    },
+    {
+      "q": "Las luces intermitentes de emergencias deben usarse para indicar:",
+      "answers": [
+        "Detención temporaria en “doble fila”.",
+        "Detención en peajes, zonas peligrosas o maniobras riesgosas.",
+        "Solamente cuando la detención sea para entrar o salir de estacionamientos."
+      ],
+      "action": "drop",
+      "kind": "contradicts law",
+      "why": "Art. 47 e Ley 24.449: hazard lights are for stops at tolls, dangerous zones or risky manoeuvres; the key says only for entering or leaving parking.",
+      "sources": [
+        "https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/818/texact.htm"
+      ]
+    },
+    {
+      "q": "En una subida estrecha, ¿quién tiene prioridad de paso?",
+      "answers": [
+        "Quien asciende por la misma.",
+        "Quien desciende por la misma.",
+        "Quien desciende salvo que éste lleve acoplado y el que asciende no."
+      ],
+      "action": "drop",
+      "kind": "contradicts law",
+      "why": "Art. 41 Ley 24.449: on narrow slopes the descending vehicle reverses (the ascending one has priority) unless it tows a trailer; the key is inverted.",
+      "sources": [
+        "https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/818/texact.htm"
+      ]
+    },
+    {
+      "q": "La velocidad máxima permitida para circular en moto en calles de zona urbana es:",
+      "answers": [
+        "30 km/h",
+        "35 km/h",
+        "40 Km/h"
+      ],
+      "action": "drop",
+      "kind": "contradicts law",
+      "why": "Art. 51 Ley 24.449: 40 km/h on urban streets for every vehicle; the key says 30 for motorcycles.",
+      "sources": [
+        "https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/818/texact.htm"
+      ]
+    },
+    {
+      "q": "Una motocicleta puede llevar carga, la cual no debe superar",
+      "answers": [
+        "40 kg",
+        "60 kg",
+        "70 kg"
+      ],
+      "action": "drop",
+      "kind": "contradicts law",
+      "why": "Art. 40 g.3.2 Decreto 532/09: motorcycles may carry up to 100 kg (40 kg is the moped limit); the key says 40.",
+      "sources": [
+        "https://normas.gba.gob.ar/documentos/B3yPzhj0.html"
+      ]
+    },
+    {
+      "q": "Toda persona mayor de 21 años de edad puede acceder libremente a la obtención de una clase para motos, sin tener que cumplir requisito de antigüedad de manejo en otra clase.",
+      "answers": [
+        "Verdadero.",
+        "Falso."
+      ],
+      "action": "drop",
+      "kind": "contradicts law",
+      "why": "Decreto 532/09 (text of Decreto 1350/2018) exempts adults from the prior-class requirement for the larger motorcycle classes; the key says Falso. Medium confidence.",
+      "sources": [
+        "https://normas.gba.gob.ar/documentos/B3yPzhj0.html"
+      ]
+    },
+    {
+      "q": "En vía semaforizada, avanzando con luz verde a su frente, si el vehículo realiza un giro para circular por la calle transversal, ¿debe ceder el paso al peatón?:",
+      "answers": [
+        "Tener en cuenta el semáforo opuesto.",
+        "Debe respetar la prioridad de paso de los peatones.",
+        "No está obligado a detenerse porque lo habilita la luz verde."
+      ],
+      "action": "drop",
+      "kind": "contradicts law",
+      "why": "The PDF marks two answers, one of them ('no está obligado a detenerse…') against art. 41 e Ley 24.449 (pedestrians have priority when turning).",
+      "sources": [
+        "https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/818/texact.htm"
+      ]
+    }
+  ]
+}
