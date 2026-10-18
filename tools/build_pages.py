@@ -129,7 +129,7 @@ def page(title, description, path, body, jsonld=None):
 </head>
 <body>
 <main class="page">
-<header class="bar"><a class="bar__home" href="/">{APP_NAME}</a></header>
+<header class="bar"><a class="bar__home" href="/"><span>{APP_NAME}</span><span class="bar__sub">Provincia de Buenos Aires</span></a></header>
 {body}
 <footer class="footer">
   <p>Herramienta no oficial. Las preguntas y respuestas salen del cuestionario publicado por la Dirección Provincial de Política y Seguridad Vial; el examen real puede variar.</p>

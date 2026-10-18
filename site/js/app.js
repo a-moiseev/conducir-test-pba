@@ -133,7 +133,8 @@ function topBar() {
   const dark = isDark();
   return h(
     "header.bar",
-    h("a.bar__home", { href: "#/" }, tr("appName")),
+    // PBA is spelled out under the name: not every visitor knows the abbreviation.
+    h("a.bar__home", { href: "#/" }, h("span", tr("appName")), h("span.bar__sub", tr("region"))),
     // The license-class plate doubles as the class switch (there are only two classes).
     settings.cls &&
       h(
