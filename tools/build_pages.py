@@ -14,7 +14,6 @@ from pathlib import Path
 
 SITE_URL = "https://conducir.ar"
 APP_NAME = "Test de Conducir PBA"
-SOURCE_URL = "https://www.gba.gob.ar/static/seguridadvial/docs/cuestionario.pdf"
 LETTERS = "ABCDEFGH"
 # The author's website offer lives in the app (#/web), in the visitor's language.
 PROMO_LINK = '<p><a href="/#/web">¿Necesitás un sitio web para tu negocio?</a></p>'
@@ -116,7 +115,6 @@ def page(title, description, path, body):
   <p>Herramienta no oficial. Las preguntas y respuestas salen del cuestionario publicado por la Dirección Provincial de Política y Seguridad Vial; el examen real puede variar.</p>
   <p class="footer__links">
     <a href="/preguntas/">Todas las preguntas</a>
-    <a href="{SOURCE_URL}" target="_blank" rel="noopener">Cuestionario oficial (PDF)</a>
     <a href="/#/about">Acerca del sitio</a>
   </p>
   {PROMO_LINK}
