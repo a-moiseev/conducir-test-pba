@@ -7,6 +7,7 @@ search engines see and where search visitors land. They are in Spanish only and 
     /preguntas/<topic>/    every question of the topic, correct answers marked
     /sitemap.xml
 """
+import json
 import re
 import unicodedata
 from html import escape
@@ -79,8 +80,23 @@ def classes_label(classes):
     return "Clase " + classes[0] if len(classes) == 1 else "Clases " + " y ".join(classes)
 
 
-def page(title, description, path, body):
+def breadcrumbs(*crumbs):
+    """schema.org BreadcrumbList from (name, path) pairs, root first."""
+    return {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{"@type": "ListItem", "position": i, "name": name, "item": SITE_URL + path}
+                            for i, (name, path) in enumerate(crumbs, 1)],
+    }
+
+
+def page(title, description, path, body, jsonld=None):
     url = SITE_URL + path
+    # A "</" inside the JSON would end the script element early.
+    ld = ""
+    if jsonld:
+        data = json.dumps(jsonld, ensure_ascii=False).replace("</", "<\\/")
+        ld = f'\n  <script type="application/ld+json">{data}</script>'
     return f"""<!doctype html>
 <html lang="es">
 <head>
@@ -95,6 +111,10 @@ def page(title, description, path, body):
   <meta property="og:title" content="{escape(title)}">
   <meta property="og:description" content="{escape(description)}">
   <meta property="og:url" content="{url}">
+  <meta property="og:image" content="{SITE_URL}/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">{ld}
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#23262b" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -131,8 +151,9 @@ def question_html(item, classes, number):
     if item.get("eliminatory"):
         parts.append('<p class="badge-elim">Eliminatoria</p>')
     parts.append(f'<h2 class="sq__q"><span class="sq__n">{number}.</span> {escape(es["q"])}</h2>')
-    for src in item.get("img", []):
-        parts.append(f'<figure class="qimg"><img src="/{escape(src)}" alt="" loading="lazy"></figure>')
+    images = item.get("img", [])
+    for src, alt in zip(images, item.get("alt") or [""] * len(images)):
+        parts.append(f'<figure class="qimg"><img src="/{escape(src)}" alt="{escape(alt)}" loading="lazy"></figure>')
     parts.append('<ol class="sq__opts">')
     for i, answer in enumerate(es["answers"]):
         right = i in item["correct"]
@@ -173,7 +194,9 @@ def topic_page(topic, prev_topic, next_topic):
     title = f"{topic['name']}: preguntas del examen de manejo PBA"
     description = (f"{n} preguntas de «{topic['name']}» del examen teórico de la licencia de conducir "
                    f"de la Provincia de Buenos Aires, con las respuestas correctas.")
-    return page(title, description, f"/preguntas/{topic['slug']}/", body)
+    path = f"/preguntas/{topic['slug']}/"
+    crumbs = breadcrumbs(("Inicio", "/"), ("Preguntas del examen", "/preguntas/"), (topic["name"], path))
+    return page(title, description, path, body, crumbs)
 
 
 def index_page(topics):
@@ -194,7 +217,8 @@ def index_page(topics):
     title = "Preguntas del examen de manejo PBA con respuestas"
     description = (f"Las {total} preguntas oficiales del examen teórico de la licencia de conducir de la "
                    "Provincia de Buenos Aires, por tema y con respuestas.")
-    return page(title, description, "/preguntas/", body)
+    return page(title, description, "/preguntas/", body,
+                breadcrumbs(("Inicio", "/"), ("Preguntas del examen", "/preguntas/")))
 
 
 def sitemap(paths):

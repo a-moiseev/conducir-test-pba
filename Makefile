@@ -1,7 +1,7 @@
 PY := .venv/bin/python -I
 PDF_URL := https://www.gba.gob.ar/static/seguridadvial/docs/cuestionario.pdf
 
-.PHONY: venv fetch parse webp i18n-check site test serve
+.PHONY: venv fetch parse webp og i18n-check site test serve
 
 venv:
 	python3 -m venv .venv
@@ -20,6 +20,10 @@ parse:
 # data/pba/images/*.jpg -> data/pba/webp/*.webp (what the site serves)
 webp:
 	$(PY) tools/make_webp.py data/pba
+
+# Share preview for every page -> site/og.png (committed; rerun after changing tools/make_og.py)
+og:
+	$(PY) tools/make_og.py site
 
 i18n-check:
 	$(PY) tools/i18n.py check ru

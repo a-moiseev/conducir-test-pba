@@ -263,7 +263,7 @@ function questionCard(q, { order, selected, translate = true, onToggle }) {
       h("span", { lang: "es" }, q.es.q),
       translated && h("span.trans", { lang }, text.q),
     ),
-    (q.img || []).map((src) => h("figure.qimg", h("img", { src, alt: "", loading: "eager" }))),
+    (q.img || []).map((src, i) => h("figure.qimg", h("img", { src, alt: q.alt?.[i] || "", lang: "es", loading: "eager" }))),
     multi && h("p.multi-hint", tr("pickAll")),
     h("ul.options", { "aria-label": multi ? tr("pickAll") : tr("pickOne") }, optionButtons.map((b) => h("li", b))),
     fixNote,
@@ -1006,7 +1006,7 @@ function route() {
   const path = location.hash.replace(/^#\/?/, "");
   const choosingClass = !settings.cls && !OPEN_ROUTES.has(path);
   const [view, titleKey] = choosingClass ? [viewClass, null] : ROUTES[path] || ROUTES[""];
-  document.title = titleKey ? `${tr(titleKey)} — ${tr("appName")}` : tr("appName");
+  document.title = titleKey ? `${tr(titleKey)} — ${tr("appName")}` : tr("homeTitle");
   view();
 }
 

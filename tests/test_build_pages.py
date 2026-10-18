@@ -54,7 +54,8 @@ class BuildPagesTest(unittest.TestCase):
 
     def test_writes_escaped_topic_pages_and_sitemap(self):
         items = [item("s1", "1) Preguntas para todas las clases: Seguridad", correct=(1,)),
-                 item("m1", "3) Preguntas para la clase de motos:", page=9, img=["img/0001.jpg"])]
+                 item("m1", "3) Preguntas para la clase de motos:", page=9, img=["img/0001.jpg"],
+                      alt=['Señal de "PARE"'])]
         with tempfile.TemporaryDirectory() as tmp:
             self.assertEqual(build_pages.build_pages({"a": items}, tmp), 2)
             seguridad = (Path(tmp) / "preguntas" / "seguridad" / "index.html").read_text()
@@ -63,7 +64,9 @@ class BuildPagesTest(unittest.TestCase):
             self.assertIn('<li class="is-right"><span class="sq__key">B</span><span>No', seguridad)
             self.assertIn('href="https://conducir.ar/preguntas/seguridad/"', seguridad)
             motos = (Path(tmp) / "preguntas" / "motos-clase-a" / "index.html").read_text()
-            self.assertIn('<img src="/img/0001.jpg"', motos)
+            self.assertIn('<img src="/img/0001.jpg" alt="Señal de &quot;PARE&quot;"', motos)
+            self.assertIn('"@type": "BreadcrumbList"', motos)
+            self.assertIn('<meta property="og:image" content="https://conducir.ar/og.png">', motos)
             sitemap = (Path(tmp) / "sitemap.xml").read_text()
             self.assertIn("<loc>https://conducir.ar/preguntas/motos-clase-a/</loc>", sitemap)
             self.assertTrue((Path(tmp) / "preguntas" / "index.html").exists())

@@ -1,6 +1,7 @@
 """Build per-category question files for the static site.
 
-Reads data/pba/questions.json, data/pba/i18n/<lang>.json and data/pba/glossary.json,
+Reads data/pba/questions.json, data/pba/i18n/<lang>.json, data/pba/glossary.json and
+data/pba/image_alts.json (Spanish alt text for every image, keyed by file stem),
 applies the hand-made answer keys and corrections for later laws (answer_keys.json,
 corrections.json), writes site/data/<category>.json and site/data/glossary.json, copies the WebP versions of
 the images the questions use (data/pba/webp, made by make_webp.py) to site/img/, and writes the static pages for search engines
@@ -229,10 +230,17 @@ def main():
         shutil.rmtree(tmp, ignore_errors=True)
         tmp.mkdir(parents=True)
 
+    alts = json.loads((data / "image_alts.json").read_text(encoding="utf-8"))
     used_images = set()
     built = {}
     for cat, spec in CATEGORIES.items():
         items, dropped, warnings = build_category(questions, ids, stores, spec)
+        for item in items:
+            if item.get("img"):
+                stems = [Path(p).stem for p in item["img"]]
+                if not all(alts.get(stem) for stem in stems):
+                    raise SystemExit(f"{item['id']}: add alt text for {stems} to image_alts.json")
+                item["alt"] = [alts[stem] for stem in stems]
         built[cat] = items
         payload = {"category": cat.upper(), "source": SOURCE_URL, "questions": items}
         (data_tmp / f"{cat}.json").write_text(
