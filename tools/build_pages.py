@@ -119,7 +119,7 @@ LANGS = {
     "en": {
         "root": "/en/questions/", "app": "/?lang=en", "locale": "en_US", "name": "English",
         "home": "Home", "index_crumb": "Exam questions",
-        "index_title": "Buenos Aires driving test questions in English, with answers",
+        "index_title": "Province of Buenos Aires driving test questions in English, with answers",
         "index_h1": "Province of Buenos Aires driving theory test questions in English",
         "index_desc": lambda total: (f"All {total} official questions of the Province of Buenos Aires driving "
                                      "theory test in English, by topic, with the Spanish original and the answers."),
@@ -128,7 +128,7 @@ LANGS = {
             "(cars and pickups) licenses, by topic, translated into English with the Spanish original and "
             "the correct answer marked. The exam has 40 questions and is in Spanish: you pass with 30 "
             "correct and all 5 eliminatory ones right."),
-        "topic_title": lambda name: f"{name}: Buenos Aires driving test questions in English",
+        "topic_title": lambda name: f"{name}: Province of Buenos Aires driving test in English",
         "topic_desc": lambda n, name: (f"{n} “{name}” questions of the Province of Buenos Aires driving theory "
                                        "test in English, with the Spanish original and the correct answers."),
         "topic_intro": lambda n, elim: (
@@ -148,7 +148,7 @@ LANGS = {
     "ru": {
         "root": "/ru/voprosy/", "app": "/?lang=ru", "locale": "ru_RU", "name": "Русский",
         "home": "Главная", "index_crumb": "Вопросы экзамена",
-        "index_title": "Вопросы экзамена на права в Буэнос-Айресе на русском, с ответами",
+        "index_title": "Вопросы экзамена на права провинции Буэнос-Айрес на русском, с ответами",
         "index_h1": "Вопросы теоретического экзамена на права провинции Буэнос-Айрес на русском",
         "index_desc": lambda total: (f"Все {total} официальных вопросов теоретического экзамена на права "
                                      "провинции Буэнос-Айрес на русском, по темам, с испанским оригиналом и ответами."),
@@ -157,7 +157,7 @@ LANGS = {
             "(легковые автомобили и пикапы) по темам: перевод на русский, испанский оригинал и отмеченный "
             "правильный ответ. На экзамене 40 вопросов на испанском: нужно 30 верных ответов и все "
             "5 критических вопросов без ошибок."),
-        "topic_title": lambda name: f"{name}: вопросы экзамена на права в Буэнос-Айресе на русском",
+        "topic_title": lambda name: f"{name}: экзамен на права провинции Буэнос-Айрес на русском",
         "topic_desc": lambda n, name: (f"{_q_ru(n)} темы «{name}» теоретического экзамена на права провинции "
                                        "Буэнос-Айрес на русском, с испанским оригиналом и правильными ответами."),
         "topic_intro": lambda n, elim: (
