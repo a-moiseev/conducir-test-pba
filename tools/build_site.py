@@ -5,7 +5,7 @@ data/pba/image_alts.json (Spanish alt text for every image, keyed by file stem),
 applies the hand-made answer keys and corrections for later laws (answer_keys.json,
 corrections.json), writes site/data/<category>.json and site/data/glossary.json, copies the WebP versions of
 the images the questions use (data/pba/webp, made by make_webp.py) to site/img/, and writes the static pages for search engines
-(site/preguntas/, site/sitemap.xml; see build_pages.py).
+(site/preguntas/, site/en/, site/ru/, site/sitemap.xml; see build_pages.py).
 Everything is built aside and swapped in only when everything succeeded.
 
 Usage: .venv/bin/python tools/build_site.py [data_dir] [site_dir]
@@ -267,7 +267,9 @@ def main():
 
     swap_in(data_tmp, site / "data")
     swap_in(img_tmp, site / "img")
-    swap_in(pages_tmp / "preguntas", site / "preguntas")
+    for pages in sorted(pages_tmp.iterdir()):  # preguntas/, en/, ru/
+        if pages.is_dir():
+            swap_in(pages, site / pages.name)
     (pages_tmp / "sitemap.xml").replace(site / "sitemap.xml")
     pages_tmp.rmdir()
     print(f"images: {len(used_images)}, topic pages: {topics}")

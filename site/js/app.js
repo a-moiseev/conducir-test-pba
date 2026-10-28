@@ -13,6 +13,7 @@ const CONTACT_EMAIL = "hola@conducir.ar";
 const WEB_EMAIL = "web@conducir.ar"; // the author's website offer (#/web), temporary
 const LETTERS = "ABCDEFGH";
 const HISTORY_LIMIT = 20;
+const QUESTION_PAGES = { es: "/preguntas/", en: "/en/questions/", ru: "/ru/voprosy/" }; // static pages, tools/build_pages.py
 
 const app = document.getElementById("app");
 
@@ -20,6 +21,15 @@ const app = document.getElementById("app");
 
 const settings = { lang: null, cls: null, theme: null, ...load("settings", {}) };
 delete settings.examTranslation; // the mock exam is always in Spanish now
+// Links from the English and Russian question pages carry ?lang= so the app opens in that language.
+const langParam = new URLSearchParams(location.search).get("lang");
+if (langParam !== null) {
+  if (UI_LANGS.includes(langParam)) {
+    settings.lang = langParam;
+    save("settings", settings);
+  }
+  history.replaceState(null, "", location.pathname + location.hash);
+}
 if (!UI_LANGS.includes(settings.lang)) settings.lang = "es"; // the site is for Argentina: Spanish unless chosen otherwise
 if (!CLASSES.includes(settings.cls)) settings.cls = null;
 
@@ -187,7 +197,7 @@ function footer() {
     h("p", tr("disclaimer")),
     h(
       "p.footer__links",
-      h("a", { href: "/preguntas/" }, tr("allQuestions")),
+      h("a", { href: QUESTION_PAGES[settings.lang] }, tr("allQuestions")),
       h("a", { href: "#/about" }, tr("about")),
     ),
     h("p", h("a", { href: "#/web" }, tr("promoLink"))),

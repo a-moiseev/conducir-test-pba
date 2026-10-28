@@ -43,7 +43,7 @@ tools/parse_cuestionario.py   PDF -> data/pba/questions.json + data/pba/images/
 tools/i18n.py                 translation store: pending / apply / check
 tools/make_webp.py            data/pba/images/*.jpg -> data/pba/webp/*.webp
 tools/build_site.py           data/pba -> site/data, site/img (+ build_pages.py)
-tools/build_pages.py          static topic pages and sitemap for search engines
+tools/build_pages.py          static topic pages (es / en / ru) and sitemap for search engines
 data/pba/questions.json       parsed bank (Spanish), one record per question
 data/pba/images/              question images cropped from the PDF (JPEG; ids hash these bytes)
 data/pba/webp/                WebP copies of them, the files the site serves
@@ -106,9 +106,14 @@ to `site/img/`:
 
 It also writes static pages for search engines (`tools/build_pages.py`): `site/preguntas/`
 lists the topics, and `site/preguntas/<topic>/` shows every question of a topic with its correct
-answer, in Spanish, as plain HTML. Topics are the PDF's section headings, cleaned up. The app
-does not use these pages; it keeps loading the whole bank as one file. `site/sitemap.xml` lists
-the home page and the topic pages; `site/robots.txt` points to it.
+answer, in Spanish, as plain HTML. Topics are the PDF's section headings, cleaned up; their
+English and Russian names are in `TOPIC_TRANSLATIONS`. The same pages exist in English
+(`site/en/questions/`) and Russian (`site/ru/voprosy/`), with the Spanish original under every
+line; a language is left out while any question lacks its translation. The versions point at
+each other with hreflang (Spanish is x-default) and link to the app with `?lang=en` / `?lang=ru`,
+which the app saves as the interface language. The app does not use these pages; it keeps
+loading the whole bank as one file. `site/sitemap.xml` lists the home page and the topic pages
+of every language; `site/robots.txt` points to it.
 The author's offer to build websites is an app page (`#/web`, in the visitor's language), linked
 from the footers and the About page; it is temporary.
 
@@ -174,7 +179,7 @@ make venv      # create .venv and install PyMuPDF and Pillow
 make fetch     # download the official PDF into source/
 make parse     # rebuild data/pba from the PDF
 make i18n-check
-make site      # build site/data, site/img, site/preguntas and site/sitemap.xml
+make site      # build site/data, site/img, site/preguntas, site/en, site/ru and site/sitemap.xml
 make test      # Python and JavaScript unit tests
 make serve     # preview at http://127.0.0.1:8000
 ```

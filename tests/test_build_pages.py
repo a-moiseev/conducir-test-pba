@@ -71,6 +71,47 @@ class BuildPagesTest(unittest.TestCase):
             self.assertIn("<loc>https://conducir.ar/preguntas/motos-clase-a/</loc>", sitemap)
             self.assertTrue((Path(tmp) / "preguntas" / "index.html").exists())
             self.assertIn('href="/#/web"', seguridad)
+            self.assertNotIn("hreflang", seguridad)  # no translations, no other languages
+            self.assertFalse((Path(tmp) / "en").exists())
+
+    def test_translated_pages_link_each_other(self):
+        tr = {"en": {"q": "Question s1", "answers": ["Yes", "No"]},
+              "ru": {"q": "Вопрос s1", "answers": ["Да", "Нет"]}}
+        items = [item("s1", "1) Preguntas para todas las clases: Seguridad", correct=(1,), eliminatory=True,
+                      fix={"es": "Corregida.", "en": "Fixed."}, **tr)]
+        with tempfile.TemporaryDirectory() as tmp:
+            build_pages.build_pages({"b": items}, tmp)
+            en = (Path(tmp) / "en" / "questions" / "safety" / "index.html").read_text()
+            self.assertIn('<html lang="en">', en)
+            self.assertIn('Question s1<span class="trans" lang="es">Pregunta s1 &lt;b&gt;</span>', en)
+            self.assertIn('<li class="is-right"><span class="sq__key">B</span><span>No<span class="trans" lang="es">No</span>'
+                          '<span class="sq__mark">Correct answer</span>', en)
+            self.assertIn('<p class="notice">Fixed.</p>', en)
+            self.assertIn("Class B. Official question bank, p. 1.", en)
+            self.assertIn('href="/?lang=en#/practice"', en)
+            for code, path in [("es", "/preguntas/seguridad/"), ("en", "/en/questions/safety/"),
+                               ("ru", "/ru/voprosy/safety/"), ("x-default", "/preguntas/seguridad/")]:
+                self.assertIn(f'<link rel="alternate" hreflang="{code}" href="https://conducir.ar{path}">', en)
+            ru = (Path(tmp) / "ru" / "voprosy" / "safety" / "index.html").read_text()
+            self.assertIn("1 вопрос из официального", ru)
+            self.assertIn('<p class="notice">Corregida.</p>', ru)  # no Russian note: Spanish one
+            self.assertIn('<a href="/en/questions/safety/" hreflang="en" lang="en">English</a>', ru)
+            sitemap = (Path(tmp) / "sitemap.xml").read_text()
+            self.assertIn("<loc>https://conducir.ar/ru/voprosy/</loc>", sitemap)
+            self.assertIn("<loc>https://conducir.ar/en/questions/safety/</loc>", sitemap)
+
+    def test_language_with_a_missing_translation_is_left_out(self):
+        tr = {"en": {"q": "Q", "answers": ["Yes", "No"]}}
+        items = [item("s1", "Seguridad", **tr), item("s2", "Seguridad")]
+        with tempfile.TemporaryDirectory() as tmp:
+            build_pages.build_pages({"b": items}, tmp)
+            self.assertFalse((Path(tmp) / "en").exists())
+            self.assertFalse((Path(tmp) / "ru").exists())
+            self.assertTrue((Path(tmp) / "preguntas" / "seguridad" / "index.html").exists())
+
+    def test_ru_plural(self):
+        forms = [build_pages.ru_plural(n, "вопрос", "вопроса", "вопросов") for n in (1, 2, 5, 11, 12, 21, 24, 112)]
+        self.assertEqual(forms, ["вопрос", "вопроса", "вопросов", "вопросов", "вопросов", "вопрос", "вопроса", "вопросов"])
 
 
 if __name__ == "__main__":
